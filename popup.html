@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="jquery.js"></script>
+    <!-- head 中 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <div class="popup">
+      <div class="page__hd">
+        <div class="logo">
+          <img src="48.png" alt="WeUI" height="48px">
+        </div>
+        <p class="page__desc">京价宝 - 自动监控京东15天内的订单商品价格变化并自动提交价格保护申请。</p>
+        <p>上次检查：<span id="last_check"></span></p>
+      </div>
+      <div class="weui-cells orders">
+      </div>
+    </div>
+    <script id="tpl-orders" type="text/html">
+      {{each orders order index}}
+        {{each order.goods good i}}
+          <div class="weui-cell good">
+            <div class="weui-cell__bd">
+              <p class="good_title">{{good.name}}</p>
+            </div>
+            <div class="weui-cell__ft">
+              <span class="order_price">￥{{good.order_price}}</span>
+              {{if good.order_price > good.new_price}}
+                <span class="new_price down">￥{{good.new_price}}</span>
+              {{else if good.order_price < good.new_price}}
+                <span class="new_price up">￥{{good.new_price}}</span>
+              {{else}}
+                <span class="new_price">￥{{good.new_price}}</span>
+              {{/if}}
+              
+            </div>
+          </div>
+        {{/each}}
+        <div class="weui-cells__title time"> 下单时间： {{order.time}}</div>
+      {{/each}}
+    </script>
+    <!-- body 最后 -->
+    <script src="moment.min.js"></script>
+    <script src="template-web.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
+
+
+

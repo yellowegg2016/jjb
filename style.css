@@ -1,0 +1,34 @@
+.weui-mask,.weui-popup-container,.weui-popup-overlay{z-index:1000}
+
+.weui-mask {
+    opacity: 0;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+    visibility: hidden;
+}
+
+.weui-mask.weui-mask--visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.weui-mask, .weui-mask_transparent {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.weui-mask {
+    background: rgba(0,0,0,.6);
+}
+
+
+.weui-mask h1{
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+    padding-top: 60%;
+  }

@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+  "name": "京价保",
+  "description": "自动为你申请京东价格保护",
+  "version": "1.1",
+
+  "background": {
+    "page": "background.html",
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": "coin.png",
+    "default_popup": "popup.html"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_scripts": [
+    {
+      "matches": ["*://*.jd.com/*"],
+      "js": [
+        "jquery.js",
+        "content_script.js"
+      ],
+      "css": [
+        "style.css"
+      ],
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "16.png",
+    "48": "48.png",
+    "128": "128.png" 
+  },
+  "permissions": ["*://*.jd.com/*", "webRequest", "webRequestBlocking", "alarms", "tabs", "notifications"]
+}
