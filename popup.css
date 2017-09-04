@@ -42,3 +42,9 @@
 .time{
     text-align: right;
 }
+
+
+.auto_login{
+    font-size: 14px;
+    margin: 10px 5px;
+}
