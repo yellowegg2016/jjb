@@ -182,6 +182,42 @@ $( document ).ready(function() {
     })
   }
 
+  // 白赚
+  if ( $(".dakaLightBox .dakaBtn").length > 0 && $(".dakaLightBox .dakaBtn:visible").length > 0) {
+    $(".dakaLightBox .dakaBtn").trigger( "click" )
+    chrome.runtime.sendMessage({
+      text: "notice",
+      title: "京价宝自动为您签到领钢镚",
+      content: "连续签到7天可以领到一个钢镚"
+    }, function(response) {
+      console.log("Response: ", response);
+    });
+  }
+
+  // 领取白条券
+  if ( $(".coupon-list .js_coupon").length > 0 ) {
+    var time = 5000;
+    console.log('开始领取白条券')
+    $(".coupon-list .js_coupon").each(function() {
+      var that = $(this)
+      if ($(this).find('.js_getCoupon').text() == '点击领取' ) {
+        var coupon_name = that.find('.coupon_lineclamp').text()
+        var coupon_price = '面值：' + that.find('.sc-money').text() + ' (' + that.find('.sc-message').text() + ')'
+        setTimeout( function(){
+          $(that).find('.get-btn').trigger( "click" )
+          chrome.runtime.sendMessage({
+            text: "coupon",
+            title: "京价宝自动领到一张白条优惠券",
+            content: coupon_price + coupon_name
+          }, function(response) {
+            console.log("Response: ", response);
+          });
+        }, time)
+        time += 5000;
+      }
+    })
+  }
+
   // 领取精选券
   if ( $("#couponListUl").length > 0 ) {
     var time = 5000;

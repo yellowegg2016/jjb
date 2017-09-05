@@ -18,9 +18,14 @@ chrome.webRequest.onHeadersReceived.addListener(
 );
 
 chrome.runtime.onInstalled.addListener(function (object) {
-  chrome.tabs.create({url: "/start.html"}, function (tab) {
-    console.log("京价宝安装成功！");
-  });
+  var last_type = localStorage.getItem('jjb_type')
+  if (last_type > 0) {
+    console.log("已经安装")
+  } else {
+    chrome.tabs.create({url: "/start.html"}, function (tab) {
+      console.log("京价宝安装成功！");
+    });
+  }
 });
 
 console.log('京价宝启动成功！')
@@ -34,7 +39,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 $( document ).ready(function() {
   var last_type = localStorage.getItem('jjb_type') || 1
   var type = Number(last_type) + 1
-  if (type > 4) {
+  if (type > 6) {
     type = 1
   }
   localStorage.setItem('jjb_type', type)
@@ -54,6 +59,14 @@ $( document ).ready(function() {
     case 4:
       console.log("自动签到")
       $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fvip.m.jd.com%2Fpage%2Fhome")
+      break;
+    case 5:
+      console.log("白条券")
+      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fjdbt%2fnewcoupons%2fcoupon-list.html%3fcategory%3d0%26coupony%3d0")
+      break;
+    case 6:
+      console.log("白赚")
+      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fbk.jd.com%2fm%2fchannel%2flogin%2fdaka.html")
       break;
     }
 })
@@ -84,6 +97,10 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         type: "popup"
       });
       break;
+    case 'option':
+      localStorage.setItem('jjb_'+msg.title, msg.content);
+      console.log('option', msg)
+      break;
     case 'reload':
       chrome.notifications.create( new Date().getTime().toString(), {
         type: "basic",
@@ -103,13 +120,18 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       break;
     case 'coupon':
       var coupon = JSON.parse(msg.content)
-      chrome.notifications.create( "coupon_" + coupon.batch, {
-        type: "basic",
-        title: msg.title,
-        message: coupon.name + coupon.price,
-        isClickable: true,
-        iconUrl: 'coupon.png'
-      })
+      var mute_coupon = localStorage.getItem('jjb_mute_coupon')
+      if (mute_coupon && mute_coupon == 'true') {
+        console.log('coupon', msg)
+      } else {
+        chrome.notifications.create( "coupon_" + coupon.batch, {
+          type: "basic",
+          title: msg.title,
+          message: coupon.name + coupon.price,
+          isClickable: true,
+          iconUrl: 'coupon.png'
+        })
+      }
       break;
     case 'orders':
       localStorage.setItem('jjb_orders', msg.content);

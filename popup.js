@@ -1,6 +1,7 @@
 $( document ).ready(function() {
   var orders = JSON.parse(localStorage.getItem('jjb_orders'))
   var last_check = localStorage.getItem('jjb_last_check')
+  var mute_coupon = localStorage.getItem('jjb_mute_coupon')
   var login = localStorage.getItem('jjb_logged-in');
   if (login) {
     $("#reload").show()
@@ -9,6 +10,11 @@ $( document ).ready(function() {
     $("#reload").hide()
     $("#login").show()
   }
+
+  if (mute_coupon && mute_coupon == 'true') {
+    $("#mute_coupon").prop('checked', true)
+  }
+
   if (orders) {
     orders = orders.map(function (order) {
       order.time = moment(order.time).locale('zh-cn').calendar()
@@ -32,6 +38,16 @@ $( document ).ready(function() {
   $("#reload").on("click", function () {
     chrome.runtime.sendMessage({
       text: "reload",
+    }, function(response) {
+      console.log("Response: ", response);
+    });
+  })
+
+  $("#mute_coupon").on("click", function () {
+    chrome.runtime.sendMessage({
+      text: "option",
+      title: "mute_coupon",
+      content: $("#mute_coupon").prop('checked')
     }, function(response) {
       console.log("Response: ", response);
     });
