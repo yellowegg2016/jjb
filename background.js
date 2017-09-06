@@ -29,17 +29,23 @@ chrome.runtime.onInstalled.addListener(function (object) {
 });
 
 console.log('京价宝启动成功！')
-
-chrome.alarms.create('checkEveryDay', {periodInMinutes: 2*60})
 chrome.alarms.onAlarm.addListener(function( alarm ) {
   console.log('reload', new Date())
   chrome.runtime.reload()
-});
+})
 
 $( document ).ready(function() {
   var last_type = localStorage.getItem('jjb_type') || 1
   var type = Number(last_type) + 1
-  if (type > 6) {
+  var hour = moment().hour()
+
+  if (hour < 14) {
+    chrome.alarms.create('delayInMinutes', {periodInMinutes: 30})
+  } else {
+    chrome.alarms.create('delayInMinutes', {periodInMinutes: 60})
+  }
+
+  if (type > 7) {
     type = 1
   }
   localStorage.setItem('jjb_type', type)
@@ -67,6 +73,10 @@ $( document ).ready(function() {
     case 6:
       console.log("白赚")
       $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fbk.jd.com%2fm%2fchannel%2flogin%2fdaka.html")
+      break;
+    case 7:
+      console.log("京东金融签到")
+      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fspe%2fqyy%2fmain%2findex.html%3fuserType%3d41")
       break;
     }
 })

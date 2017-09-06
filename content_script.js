@@ -158,6 +158,19 @@ $( document ).ready(function() {
     });
   }
 
+
+  // 京东金融签到
+  if ( $("#qyy-appSign").length > 0 && $("#appSign-btn").text() == "快抢钢镚") {
+    $("#appSign-btn").trigger( "click" )
+    chrome.runtime.sendMessage({
+      text: "notice",
+      title: "京价宝自动为您签到抢钢镚",
+      content: "应该是领到了0.1个钢镚"
+    }, function(response) {
+      console.log("Response: ", response);
+    });
+  }
+
   // 领取 PLUS 券
   if ( $(".coupon-floor .coupon-item").length > 0 ) {
     var time = 5000;
