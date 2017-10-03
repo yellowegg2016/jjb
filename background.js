@@ -45,14 +45,14 @@ $( document ).ready(function() {
     chrome.alarms.create('delayInMinutes', {periodInMinutes: 60})
   }
 
-  if (type > 7) {
+  if (type > 6) {
     type = 1
   }
   localStorage.setItem('jjb_type', type)
   switch(type){
     case 1:
       console.log("价格保护")
-      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fprotect%3ftype%3d3")
+      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu")
       break;
     case 2:
       console.log("自动领券")
@@ -71,22 +71,39 @@ $( document ).ready(function() {
       $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fjdbt%2fnewcoupons%2fcoupon-list.html%3fcategory%3d0%26coupony%3d0")
       break;
     case 6:
-      console.log("白赚")
-      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fbk.jd.com%2fm%2fchannel%2flogin%2fdaka.html")
-      break;
-    case 7:
       console.log("京东金融签到")
       $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fspe%2fqyy%2fmain%2findex.html%3fuserType%3d41")
+      break;
+    case 7:
+      console.log("自动访问领京豆")
+      $("#iframe").attr('src', "https://bean.jd.com/myJingBean/list")
       break;
     }
 })
 
 // 点击通知
 chrome.notifications.onClicked.addListener(function (notificationId){
-  if (notificationId.split('_')[1]) {
-    chrome.tabs.create({
-      url: "http://search.jd.com/Search?coupon_batch="+notificationId.split('_')[1]
-    })
+  if (notificationId.split('_').length > 0) {
+    var batch = notificationId.split('_')[1]
+    switch(batch){
+      case 'baitiao':
+        chrome.tabs.create({
+          url: "http://vip.jr.jd.com/coupon/myCoupons?default=IOU"
+        })
+        break;
+      case 'jiabao':
+        chrome.windows.create({
+          width: 420,
+          height: 800,
+          url: "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu",
+          type: "popup"
+        });
+        break;
+      default:
+        chrome.tabs.create({
+          url: "http://search.jd.com/Search?coupon_batch="+notificationId.split('_')[1]
+        })
+    }
   }
 })
 
@@ -121,11 +138,32 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       chrome.runtime.reload()
       break;
     case 'notice':
-      chrome.notifications.create( new Date().getTime().toString(), {
+      chrome.notifications.create( new Date().getTime().toString() + '_' + msg.batch, {
         type: "basic",
         title: msg.title,
         message: msg.content,
         iconUrl: 'coin.png'
+      })
+      break;
+    case 'create_tab':
+      var content = JSON.parse(msg.content)
+      chrome.tabs.create({
+        index: content.index,
+        url: content.url,
+        active: content.active == 'true',
+        pinned: content.pinned == 'true'
+      })
+      break;
+    case 'remove_tab':
+      var content = JSON.parse(msg.content)
+      chrome.tabs.query({
+        title: content.title,
+        pinned: content.pinned == 'true'
+      }, function (tabs) {
+        var tabIds = $.map(tabs, function (tab) {
+          return tab.id
+        })
+        chrome.tabs.remove(tabIds)
       })
       break;
     case 'coupon':
