@@ -21,6 +21,19 @@
     bottom: 0;
 }
 
+.weui-mask span.close{
+    font-size: 30px;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 37px;
+    padding: 4px 12px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    line-height: 29px;
+    cursor: pointer;
+}
+
 .weui-mask {
     background: rgba(0,0,0,.6);
 }

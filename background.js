@@ -1,3 +1,56 @@
+let jobs = [
+  {
+    id: '1',
+    src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu',
+    title: '价格保护',
+    frequency: 'daily'
+  },
+  {
+    id: '2',
+    src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fcoupon.m.jd.com%2Fcenter%2FgetCouponCenter.action',
+    title: '领精选券',
+    frequency: 'daily'
+  },
+  {
+    id: '3',
+    src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fplus.m.jd.com%2Findex',
+    title: 'PLUS券',
+    frequency: 'daily'
+  },
+  {
+    id: '4',
+    src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fjdbt%2fnewcoupons%2fcoupon-list.html%3fcategory%3d0%26coupony%3d0',
+    title: '领白条券',
+    frequency: 'daily'
+  },
+  {
+    id: '5',
+    src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fvip.m.jd.com%2Fpage%2Fhome',
+    title: '京豆签到',
+    frequency: 'daily'
+  },
+  {
+    id: '6',
+    src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fspe%2fqyy%2fmain%2findex.html%3fuserType%3d41',
+    title: '京东金融签到',
+    frequency: 'daily'
+  },
+  {
+    id: '7',
+    src: 'https://passport.jd.com/new/login.aspx?ReturnUrl=http://bean.jd.com/myJingBean/list',
+    title: '店铺签到',
+    frequency: 'daily'
+  }
+]
+
+
+let mapFrequency = {
+  '2h': 2 * 60,
+  '5h': 5 * 60,
+  'daily': 12 * 60,
+  'never': 24 * 60
+}
+
 // This is to remove X-Frame-Options header, if present
 chrome.webRequest.onHeadersReceived.addListener(
     function(info) {
@@ -28,57 +81,114 @@ chrome.runtime.onInstalled.addListener(function (object) {
   }
 });
 
-console.log('京价宝启动成功！')
+
 chrome.alarms.onAlarm.addListener(function( alarm ) {
-  console.log('reload', new Date())
-  chrome.runtime.reload()
+  switch(true){
+    // 定时检查任务
+    case alarm.name.startsWith('delayIn'):
+      findJobs()
+      run()
+      break;
+    case alarm.name.startsWith('runJob'):
+      var jobId = alarm.name.split('_')[1]
+      run(jobId)
+      break;
+    case alarm.name.startsWith('closeTab'):
+      var tabId = alarm.name.split('_')[1]
+      try {
+        chrome.tabs.remove(parseInt(tabId))
+      } catch (e) {}
+      break;
+    case alarm.name == 'reload':
+      chrome.runtime.reload()
+      break;
+  }
 })
 
-$( document ).ready(function() {
-  var last_type = localStorage.getItem('jjb_type') || 1
-  var type = Number(last_type) + 1
-  var hour = moment().hour()
+// 保存任务栈
+function saveJobStack(jobStack) {
+  jobStack = _.uniq(jobStack)
+  localStorage.setItem('jobStack', JSON.stringify(jobStack));
+}
 
-  if (hour < 14) {
-    chrome.alarms.create('delayInMinutes', {periodInMinutes: 30})
-  } else {
-    chrome.alarms.create('delayInMinutes', {periodInMinutes: 60})
-  }
 
-  if (type > 6) {
-    type = 1
-  }
-  localStorage.setItem('jjb_type', type)
-  switch(type){
-    case 1:
-      console.log("价格保护")
-      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu")
-      break;
-    case 2:
-      console.log("自动领券")
-      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fcoupon.m.jd.com%2Fcenter%2FgetCouponCenter.action")
-      break;
-    case 3:
-      console.log("PLUS券")
-      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fplus.m.jd.com%2Findex")
-      break;
-    case 4:
-      console.log("自动签到")
-      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fvip.m.jd.com%2Fpage%2Fhome")
-      break;
-    case 5:
-      console.log("白条券")
-      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fjdbt%2fnewcoupons%2fcoupon-list.html%3fcategory%3d0%26coupony%3d0")
-      break;
-    case 6:
-      console.log("京东金融签到")
-      $("#iframe").attr('src', "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fspe%2fqyy%2fmain%2findex.html%3fuserType%3d41")
-      break;
-    case 7:
-      console.log("自动访问领京豆")
-      $("#iframe").attr('src', "https://bean.jd.com/myJingBean/list")
-      break;
+function getJobs() {
+  return _.map(jobs, (job) => {
+    job.last_run_at = localStorage.getItem('job' + job.id + '_lasttime')
+    job.frequency = localStorage.getItem('job' + job.id + '_frequency') || job.frequency
+    return job
+  })
+}
+
+
+// 寻找乔布斯
+function findJobs() {
+  var jobStack = localStorage.getItem('jobStack') ? JSON.parse(localStorage.getItem('jobStack')) : []
+  var jobList = getJobs()
+  jobList.forEach(function(job) {
+    switch(job.frequency){
+      case '2h':
+        // 如果从没运行过，或者上次运行已经过去超过2小时，那么需要运行
+        if (!job.last_run_at || moment().isAfter(moment(job.last_run_at).add(2, 'hour')) ) {
+          jobStack.push(job.id)
+        }
+        break;
+      case '5h':
+        // 如果从没运行过，或者上次运行已经过去超过5小时，那么需要运行
+        if (!job.last_run_at || moment().isAfter(moment(job.last_run_at).add(5, 'hour')) ) {
+          jobStack.push(job.id)
+        }
+        break;
+      case 'daily':
+        // 如果从没运行过，或者上次运行不在今天
+        if ( !job.last_run_at || !moment().isSame(job.last_run_at, 'day') ) {
+          jobStack.push(job.id)
+        }
+        break;
+      default:
+        console.log('ok, never run ', job.title)
     }
+  });
+  saveJobStack(jobStack)
+}
+
+// 执行组织交给我的任务
+function run(jobId) {
+  console.log("run", jobId)
+  // 如果没有指定任务ID 就从任务栈里面找一个
+  if (!jobId) {
+    var jobStack = localStorage.getItem('jobStack') ? JSON.parse(localStorage.getItem('jobStack')) : []
+    if (jobStack && jobStack.length > 0) {
+      var jobId = jobStack.shift();
+    } else {
+      console.log('好像没有什么事需要我做...')
+    }
+  }
+  var jobList = getJobs()
+  var job = _.find(jobList, {id: jobId})
+  if (job) {
+    console.log("运行", job.title)
+    $("#iframe").attr('src', job.src)
+    var last_run_at = localStorage.setItem('job' + job.id + '_lasttime', new Date().getTime())
+    // 安排下一次运行
+    chrome.alarms.create('runJob_'+job.id, {
+      delayInMinutes: mapFrequency[job.frequency]
+    })
+  }
+
+  if (jobStack) {
+    saveJobStack(jobStack)
+  }
+}
+
+$( document ).ready(function() {
+  // 每10分钟运行一次定时任务
+  chrome.alarms.create('delayInMinutes', {periodInMinutes: 10})
+
+  // 每600分钟完全重载
+  chrome.alarms.create('reload', {periodInMinutes: 600})
+
+
 })
 
 // 点击通知
@@ -128,22 +238,30 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       localStorage.setItem('jjb_'+msg.title, msg.content);
       console.log('option', msg)
       break;
-    case 'reload':
+    case 'runJob':
+      var jobId = msg.content.split('job')[1]
+      var jobList = getJobs()
+      var job = _.find(jobList, {id: jobId})
+      run(jobId)
       chrome.notifications.create( new Date().getTime().toString(), {
         type: "basic",
-        title: "正在重新运行检查..",
+        title: "正在重新运行" + job.title,
         message: "如果有情况我再叫你",
-        iconUrl: 'coin.png'
+        iconUrl: '128.png'
       })
-      chrome.runtime.reload()
       break;
-    case 'notice':
-      chrome.notifications.create( new Date().getTime().toString() + '_' + msg.batch, {
-        type: "basic",
-        title: msg.title,
-        message: msg.content,
-        iconUrl: 'coin.png'
-      })
+    case 'checkin_notice':
+      var mute_checkin = localStorage.getItem('mute_checkin')
+      if (mute_checkin && mute_checkin == 'checked') {
+        console.log('checkin', msg)
+      } else {
+        chrome.notifications.create( new Date().getTime().toString() + '_' + msg.batch, {
+          type: "basic",
+          title: msg.title,
+          message: msg.content,
+          iconUrl: 'coin.png'
+        })
+      }
       break;
     case 'create_tab':
       var content = JSON.parse(msg.content)
@@ -152,24 +270,29 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         url: content.url,
         active: content.active == 'true',
         pinned: content.pinned == 'true'
+      }, function (tab) {
+        chrome.alarms.create('closeTab_'+tab.id, {delayInMinutes: 1})
       })
       break;
     case 'remove_tab':
       var content = JSON.parse(msg.content)
+      console.log('content', content)
       chrome.tabs.query({
-        title: content.title,
+        url: content.url,
         pinned: content.pinned == 'true'
       }, function (tabs) {
+        console.log('tabs', tabs)
         var tabIds = $.map(tabs, function (tab) {
           return tab.id
         })
+        console.log('tabIds', tabIds)
         chrome.tabs.remove(tabIds)
       })
       break;
     case 'coupon':
       var coupon = JSON.parse(msg.content)
-      var mute_coupon = localStorage.getItem('jjb_mute_coupon')
-      if (mute_coupon && mute_coupon == 'true') {
+      var mute_coupon = localStorage.getItem('mute_coupon')
+      if (mute_coupon && mute_coupon == 'checked') {
         console.log('coupon', msg)
       } else {
         chrome.notifications.create( "coupon_" + coupon.batch, {
@@ -183,7 +306,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       break;
     case 'orders':
       localStorage.setItem('jjb_orders', msg.content);
-      localStorage.setItem('jjb_last_check', new Date());
+      localStorage.setItem('jjb_last_check', new Date().getTime());
       break;
     default:
       console.log("Received %o from %o, frame", msg, sender.tab, sender.frameId);

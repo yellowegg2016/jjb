@@ -1,15 +1,45 @@
 .popup{
-    width: 420px;
+    width: 780px;
 }
 
 .page__hd {
-    padding: 20px;
+    padding: 10px;
+}
+
+
+.page__desc{
+    padding: 5px 10px;
+}
+.settings{
+    display: inline-block;
+    width: 45%;
+    float: left;
+}
+
+.orderlist{
+    width: 54%;
+    float: right;
+    overflow: hidden;
+}
+
+.reload{
+    background: url(reload.svg) no-repeat 1px 5px;
+    width: 20px;
+    height: 21px;
+    color: #dcdcdc;
+    display: inline-block;
+    background-size: 17px;
+}
+
+.orders{
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 500px;
 }
 
 .logo{
     display: inline-block;
     float: left;
-    padding: 0 10px;
 }
 
 .good_title{
@@ -18,6 +48,12 @@
 
 .good{
     background: #eee;
+}
+
+.success_log{
+    font-size: 12px;
+    margin: 10px;
+    color: #690;
 }
 
 .order_price{

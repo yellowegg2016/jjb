@@ -1,18 +1,11 @@
 $( document ).ready(function() {
   var orders = JSON.parse(localStorage.getItem('jjb_orders'))
   var last_check = localStorage.getItem('jjb_last_check')
-  var mute_coupon = localStorage.getItem('jjb_mute_coupon')
   var login = localStorage.getItem('jjb_logged-in');
   if (login) {
-    $("#reload").show()
     $("#login").hide()
   } else {
-    $("#reload").hide()
     $("#login").show()
-  }
-
-  if (mute_coupon && mute_coupon == 'true') {
-    $("#mute_coupon").prop('checked', true)
   }
 
   if (orders) {
@@ -35,22 +28,30 @@ $( document ).ready(function() {
     });
     $('.orders').html(orders_html)
   }
-  $("#reload").on("click", function () {
-    chrome.runtime.sendMessage({
-      text: "reload",
-    }, function(response) {
-      console.log("Response: ", response);
-    });
+
+  $(".weui-cell_select").each(function () {
+    var job_elem = $(this)
+    if (job_elem) {
+      var jobId = job_elem.attr('id')
+      if (jobId) {
+        var last_run_time = localStorage.getItem(jobId + '_lasttime')
+        job_elem.find('.reload').attr('title', '上次运行： '+ moment(Number(last_run_time)).locale('zh-cn').calendar())
+      }
+    }
   })
 
-  $("#mute_coupon").on("click", function () {
-    chrome.runtime.sendMessage({
-      text: "option",
-      title: "mute_coupon",
-      content: $("#mute_coupon").prop('checked')
-    }, function(response) {
-      console.log("Response: ", response);
-    });
+
+  $(".reload").on("click", function () {
+    var job_elem = $(this).parent().parent()
+
+    if (job_elem) {
+      chrome.runtime.sendMessage({
+        text: "runJob",
+        content: job_elem.attr('id')
+      }, function(response) {
+        console.log("Response: ", response);
+      });
+    }
   })
 
   $("#login").on("click", function () {
