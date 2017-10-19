@@ -73,6 +73,11 @@ $( document ).ready(function() {
   })
 
 
+  $("#pay").on("click", function () {
+    $("#dialogs").show()
+  })
+
+
   $(".reload").on("click", function () {
     var job_elem = $(this).parent().parent()
 
