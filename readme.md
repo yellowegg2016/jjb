@@ -20,9 +20,7 @@
 
 ![](http://ogbgloagr.bkt.clouddn.com/jjb/jjb.png?imageView2/0/h/1080)
 
-![](http://ogbgloagr.bkt.clouddn.com/jjb/WechatIMG88.jpeg?imageView2/0/h/1080)
-
-![](http://ogbgloagr.bkt.clouddn.com/jjb/WechatIMG89.jpeg?imageView2/0/h/1080)
+![](http://ogbgloagr.bkt.clouddn.com/jjb/jjb_phone.png?imageView2/0/h/1080)
 
 
 ## 价格

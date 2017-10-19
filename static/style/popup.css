@@ -23,7 +23,7 @@
 }
 
 .reload{
-    background: url(reload.svg) no-repeat 1px 5px;
+    background: url(../image/reload.svg) no-repeat 1px 5px;
     width: 20px;
     height: 21px;
     color: #dcdcdc;
