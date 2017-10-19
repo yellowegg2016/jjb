@@ -64,7 +64,7 @@ chrome.webRequest.onHeadersReceived.addListener(
       return {responseHeaders: headers};
     },
     {
-        urls: ['*://*.jd.com/*'], //
+        urls: ['*://*.jd.com/*', '*://*.jd.hk/*'], //
         types: ['sub_frame']
     },
     ['blocking', 'responseHeaders']
@@ -232,7 +232,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         type: "basic",
         title: "谢谢老板",
         message: "我会努力签到、领券、申请价格保护来回报你的",
-        iconUrl: '128.png'
+        iconUrl: 'static/image/128.png'
       })
       break;
     case 'openLogin':
@@ -256,7 +256,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         type: "basic",
         title: "正在重新运行" + job.title,
         message: "如果有情况我再叫你",
-        iconUrl: '128.png'
+        iconUrl: 'static/image/128.png'
       })
       break;
     case 'checkin_notice':
@@ -268,7 +268,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
           type: "basic",
           title: msg.title,
           message: msg.content,
-          iconUrl: 'coin.png'
+          iconUrl: 'static/image/coin.png'
         })
       }
       break;
@@ -309,7 +309,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
           title: msg.title,
           message: coupon.name + coupon.price,
           isClickable: true,
-          iconUrl: 'coupon.png'
+          iconUrl: 'static/image/coupon.png'
         })
       }
       break;
