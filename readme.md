@@ -18,9 +18,9 @@
 
 ## 截图
 
-![](https://oi4m2ufmx.qnssl.com/jjb/jjb.png?imageView2/0/h/1080)
+![](https://oi4m2ufmx.qnssl.com/jjb/jjb.png)
 
-![](https://oi4m2ufmx.qnssl.com/jjb/jjb_phone.png?imageView2/0/h/1080)
+![](https://oi4m2ufmx.qnssl.com/jjb/jjb_phone.png)
 
 
 ## 价格
@@ -43,3 +43,6 @@
 1. 将本项目的部分或全部代码和资源进行任何形式的再发行（尤其是上传到 Chrome 商店）
 2. 利用本项目的部分或全部代码和资源进行任何商业行为
 
+<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/pLGTRpZCggU3MF7auk9AChc4/sunoj/jjb'>
+  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/pLGTRpZCggU3MF7auk9AChc4/sunoj/jjb.svg' />
+</a>
