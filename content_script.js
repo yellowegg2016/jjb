@@ -218,7 +218,7 @@ function CheckDom() {
   };
 
   // 会员页签到
-  if ( $(".user-checkin").length > 0 && !$(".user-checkin").hasClass('checked')) {
+  if ( $(".user-checkin").length && !$(".user-checkin").hasClass('checked')) {
     console.log('签到领京豆')
     $(".user-checkin").trigger( "tap" )
     $(".user-checkin").trigger( "click" )
@@ -226,19 +226,6 @@ function CheckDom() {
       text: "checkin_notice",
       title: "京价宝自动为您签到领京豆",
       content: "具体领到多少就不清楚了，大概是3个"
-    }, function(response) {
-      console.log("Response: ", response);
-    });
-  };
-
-  // 签到
-  if ( $(".btn-checkin").length > 0 && !$(".btn-checkin").hasClass('disabled')) {
-    console.log('签到领京豆')
-    $(".btn-checkin").trigger( "click" )
-    chrome.runtime.sendMessage({
-      text: "checkin_notice",
-      title: "京价宝自动为您签到领京豆",
-      content: "具体领到多少就不清楚了，大概是5个"
     }, function(response) {
       console.log("Response: ", response);
     });

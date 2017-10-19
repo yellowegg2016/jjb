@@ -230,7 +230,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       chrome.windows.create({
         width: 420,
         height: 800,
-        url: "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fprotect%3ftype%3d3",
+        url: "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu",
         type: "popup"
       });
       break;
