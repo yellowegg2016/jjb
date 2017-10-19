@@ -226,6 +226,15 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     case 'notLogin':
       localStorage.setItem('jjb_logged-in', 'N');
       break;
+    case 'paid':
+      localStorage.setItem('jjb_paid', 'Y');
+      chrome.notifications.create( new Date().getTime().toString(), {
+        type: "basic",
+        title: "谢谢老板",
+        message: "我会努力签到、领券、申请价格保护来回报你的",
+        iconUrl: '128.png'
+      })
+      break;
     case 'openLogin':
       chrome.windows.create({
         width: 420,

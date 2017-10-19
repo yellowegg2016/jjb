@@ -2,10 +2,17 @@ $( document ).ready(function() {
   var orders = JSON.parse(localStorage.getItem('jjb_orders'))
   var last_check = localStorage.getItem('jjb_last_check')
   var login = localStorage.getItem('jjb_logged-in');
+  var paid = localStorage.getItem('jjb_paid');
   if (login) {
     $("#login").hide()
   } else {
     $("#login").show()
+  }
+
+  if (paid) {
+    $("#dialogs").hide()
+  } else {
+    $("#dialogs").show()
   }
 
   if (orders) {
@@ -38,6 +45,31 @@ $( document ).ready(function() {
         job_elem.find('.reload').attr('title', '上次运行： '+ moment(Number(last_run_time)).locale('zh-cn').calendar())
       }
     }
+  })
+
+  $(".weui-dialog input[name='payMethod']" ).change(function() {
+    var payMethod = $(this).val()
+    if (payMethod == 'weixin') {
+      $('.weixin_pay').show()
+      $('.alipay_pay').hide()
+    } else {
+      $('.weixin_pay').hide()
+      $('.alipay_pay').show()
+    }
+  });
+
+
+  $(".weui-dialog__ft a").on("click", function () {
+    if ($(this).data('action') == 'paid') {
+      chrome.runtime.sendMessage({
+        text: "paid"
+      }, function(response) {
+        console.log("Response: ", response);
+      });
+    } else {
+
+    }
+    $("#dialogs").hide()
   })
 
 

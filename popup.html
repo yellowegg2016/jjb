@@ -13,7 +13,7 @@
       <div class="settings">
         <div class="page__hd">
           <div class="logo">
-            <img src="48.png" alt="WeUI" height="48px">
+            <img src="48.png" height="48px">
           </div>
           <p class="page__desc">京价宝 - 自动监控京东15天内的订单商品价格变化并自动提交价格保护申请。</p>
         </div>
@@ -134,6 +134,37 @@
         <div class="weui-cells orders">
         </div>
       </div>
+
+
+      <div id="dialogs">
+        <!--BEGIN dialog1-->
+        <div class="js_dialog" id="iosDialog1" style="opacity: 1;">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog">
+              <div class="weui-dialog__hd"><strong class="weui-dialog__title">打赏任意金额</strong></div>
+              <ul class="segmented-control">
+                <li class="segmented-control__item">
+                  <input class="segmented-control__input" id="payMethod-weixin" type="radio" value="weixin" name="payMethod" checked="">
+                  <label class="segmented-control__label" for="payMethod-weixin">微信</label>
+                </li>
+                <li class="segmented-control__item">
+                  <input class="segmented-control__input" id="payMethod-phone" type="radio" value="alipay" name="payMethod">
+                  <label class="segmented-control__label" for="payMethod-phone">支付宝</label>
+                </li>
+              </ul>
+              <div class="weui-dialog__bd weixin_pay"><img src="weixin_pay.jpg" height="248px"></div>
+              <div class="weui-dialog__bd alipay_pay"><img src="alipay_pay.png" height="200px"></div>
+              <div class="weui-dialog__bd">
+                <p>京东页面经常更新，唯有你的支持才能让京价宝保持更新</p>
+              </div>
+              <div class="weui-dialog__ft">
+                  <a class="weui-dialog__btn weui-dialog__btn_primary" data-action="paid">付好了</a>
+                  <a class="weui-dialog__btn weui-dialog__btn_default" data-action="dismiss">下次吧</a>
+              </div>
+            </div>
+        </div>
+      </div>
+
     </div>
     <script id="tpl-orders" type="text/html">
       {{each orders order index}}
