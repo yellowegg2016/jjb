@@ -3,42 +3,49 @@ let jobs = [
     id: '1',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu',
     title: '价格保护',
+    mode: 'iframe',
     frequency: 'daily'
   },
   {
     id: '2',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fcoupon.m.jd.com%2Fcenter%2FgetCouponCenter.action',
     title: '领精选券',
+    mode: 'iframe',
     frequency: 'daily'
   },
   {
     id: '3',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fplus.m.jd.com%2Findex',
     title: 'PLUS券',
+    mode: 'iframe',
     frequency: 'daily'
   },
   {
     id: '4',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fjdbt%2fnewcoupons%2fcoupon-list.html%3fcategory%3d0%26coupony%3d0',
     title: '领白条券',
+    mode: 'iframe',
     frequency: 'daily'
   },
   {
     id: '5',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fvip.m.jd.com%2Fpage%2Fhome',
     title: '京豆签到',
+    mode: 'iframe',
     frequency: 'daily'
   },
   {
     id: '6',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fspe%2fqyy%2fmain%2findex.html%3fuserType%3d41',
     title: '京东金融签到',
+    mode: 'iframe',
     frequency: 'daily'
   },
   {
     id: '7',
-    src: 'https://passport.jd.com/new/login.aspx?ReturnUrl=http://bean.jd.com/myJingBean/list',
+    src: 'https://passport.jd.com/new/login.aspx?ReturnUrl=https://bean.jd.com/myJingBean/list',
     title: '店铺签到',
+    mode: 'tab',
     frequency: 'daily'
   }
 ]
@@ -168,7 +175,18 @@ function run(jobId) {
   var job = _.find(jobList, {id: jobId})
   if (job) {
     console.log("运行", job.title)
-    $("#iframe").attr('src', job.src)
+    if (job.mode == 'iframe') {
+      $("#iframe").attr('src', job.src)
+    } else {
+      chrome.tabs.create({
+        index: 1,
+        url: job.src,
+        active: false,
+        pinned: true
+      }, function (tab) {
+        chrome.alarms.create('closeTab_'+tab.id, {delayInMinutes: 3})
+      })
+    }
     var last_run_at = localStorage.setItem('job' + job.id + '_lasttime', new Date().getTime())
     // 安排下一次运行
     chrome.alarms.create('runJob_'+job.id, {
@@ -187,32 +205,32 @@ $( document ).ready(function() {
 
   // 每600分钟完全重载
   chrome.alarms.create('reload', {periodInMinutes: 600})
-
-
 })
 
 // 点击通知
 chrome.notifications.onClicked.addListener(function (notificationId){
   if (notificationId.split('_').length > 0) {
     var batch = notificationId.split('_')[1]
-    switch(batch){
-      case 'baitiao':
-        chrome.tabs.create({
-          url: "http://vip.jr.jd.com/coupon/myCoupons?default=IOU"
-        })
-        break;
-      case 'jiabao':
-        chrome.windows.create({
-          width: 420,
-          height: 800,
-          url: "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu",
-          type: "popup"
-        });
-        break;
-      default:
-        chrome.tabs.create({
-          url: "http://search.jd.com/Search?coupon_batch="+notificationId.split('_')[1]
-        })
+    if (batch) {
+      switch(batch){
+        case 'baitiao':
+          chrome.tabs.create({
+            url: "http://vip.jr.jd.com/coupon/myCoupons?default=IOU"
+          })
+          break;
+        case 'jiabao':
+          chrome.windows.create({
+            width: 420,
+            height: 800,
+            url: "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu",
+            type: "popup"
+          });
+          break;
+        default:
+          chrome.tabs.create({
+            url: "http://search.jd.com/Search?coupon_batch="+batch
+          })
+      }
     }
   }
 })
@@ -259,6 +277,14 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         iconUrl: 'static/image/128.png'
       })
       break;
+    case 'notice':
+      chrome.notifications.create( new Date().getTime().toString() + '_' + msg.batch, {
+        type: "basic",
+        title: msg.title,
+        message: msg.content,
+        iconUrl: 'static/image/128.png'
+      })
+      break;
     case 'checkin_notice':
       var mute_checkin = localStorage.getItem('mute_checkin')
       if (mute_checkin && mute_checkin == 'checked') {
@@ -268,7 +294,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
           type: "basic",
           title: msg.title,
           message: msg.content,
-          iconUrl: 'static/image/coin.png'
+          iconUrl: 'static/image/bean.png'
         })
       }
       break;

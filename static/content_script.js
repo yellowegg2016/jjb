@@ -66,7 +66,7 @@ async function dealProduct(product, order_info) {
       text: "notice",
       batch: 'jiabao',
       title: '报告老板，发现价格保护计划！',
-      content: product_name + '购买价：'+ order_price + ' 现价：' + new_price + '，已经自动提交价保申请'
+      content: product_name + '购买价：'+ order_price + ' 现价：' + new_price + '，已经自动提交价保申请，点击查看申请结果。'
     }, function(response) {
       console.log("Response: ", response);
     });
