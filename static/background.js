@@ -148,7 +148,7 @@ function findJobs() {
         break;
       case 'daily':
         // 如果从没运行过，或者上次运行不在今天
-        if ( !job.last_run_at || !moment().isSame(job.last_run_at, 'day') ) {
+        if ( !job.last_run_at || !moment().isSame(moment(job.last_run_at), 'day') ) {
           jobStack.push(job.id)
         }
         break;
@@ -161,7 +161,7 @@ function findJobs() {
 
 // 执行组织交给我的任务
 function run(jobId) {
-  console.log("run", jobId)
+  console.log("run", jobId, new Date())
   // 如果没有指定任务ID 就从任务栈里面找一个
   if (!jobId) {
     var jobStack = localStorage.getItem('jobStack') ? JSON.parse(localStorage.getItem('jobStack')) : []
