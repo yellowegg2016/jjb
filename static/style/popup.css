@@ -22,6 +22,12 @@
     overflow: hidden;
 }
 
+.no_order{
+  padding: 5em;
+  text-align: center;
+  color: #ccc;
+}
+
 #pay{
     padding: 0 0.62em;
     line-height: 1.8;

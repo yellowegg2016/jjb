@@ -218,10 +218,10 @@ function CheckDom() {
   };
 
   // 会员页签到
-  if ( $(".user-checkin").length && !$(".user-checkin").hasClass('checked')) {
+  if ( $(".sign-pop").length && !$(".sign-pop").hasClass('signed')) {
     console.log('签到领京豆')
-    $(".user-checkin").trigger( "tap" )
-    $(".user-checkin").trigger( "click" )
+    $(".sign-pop").trigger( "tap" )
+    $(".sign-pop").trigger( "click" )
     chrome.runtime.sendMessage({
       text: "checkin_notice",
       title: "京价宝自动为您签到领京豆",
@@ -240,6 +240,20 @@ function CheckDom() {
       text: "checkin_notice",
       title: "京价宝自动为您签到抢钢镚",
       content: "应该是领到了0.1个钢镚"
+    }, function(response) {
+      console.log("Response: ", response);
+    });
+  };
+
+
+  // 京东支付签到
+  if ( $(".signIn .signInBtn").length > 0  && !$(".signInBtn").hasClass('clicked')) {
+    $(".signInBtn").trigger( "tap" )
+    $(".signInBtn").trigger( "click" )
+    chrome.runtime.sendMessage({
+      text: "checkin_notice",
+      title: "京价宝自动为您签到京东支付",
+      content: "应该是领到了几个京豆"
     }, function(response) {
       console.log("Response: ", response);
     });

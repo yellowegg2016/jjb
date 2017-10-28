@@ -47,6 +47,13 @@ let jobs = [
     title: '店铺签到',
     mode: 'tab',
     frequency: 'daily'
+  },
+  {
+    id: '8',
+    src: 'https://plogin.m.jd.com/user/login.action?appid=100&returnurl=https%3a%2f%2fhome.jdpay.com%2fmy%2fsignIndex%3ffrom%3ddxjg%26source%3dJDSC',
+    title: '京东支付签到',
+    mode: 'iframe',
+    frequency: 'daily'
   }
 ]
 
@@ -71,17 +78,18 @@ chrome.webRequest.onHeadersReceived.addListener(
       return {responseHeaders: headers};
     },
     {
-        urls: ['*://*.jd.com/*', '*://*.jd.hk/*'], //
+        urls: ['*://*.jd.com/*', '*://*.jd.hk/*', "*://*.jdpay.com/*"], //
         types: ['sub_frame']
     },
     ['blocking', 'responseHeaders']
 );
 
 chrome.runtime.onInstalled.addListener(function (object) {
-  var last_type = localStorage.getItem('jjb_type')
-  if (last_type > 0) {
+  var installed = localStorage.getItem('jjb_installed')
+  if (installed) {
     console.log("已经安装")
   } else {
+    localStorage.setItem('jjb_installed', 'Y');
     chrome.tabs.create({url: "/start.html"}, function (tab) {
       console.log("京价宝安装成功！");
     });
@@ -137,18 +145,21 @@ function findJobs() {
       case '2h':
         // 如果从没运行过，或者上次运行已经过去超过2小时，那么需要运行
         if (!job.last_run_at || moment().isAfter(moment(job.last_run_at).add(2, 'hour')) ) {
+          console.log('add job', job.id, new Date())
           jobStack.push(job.id)
         }
         break;
       case '5h':
         // 如果从没运行过，或者上次运行已经过去超过5小时，那么需要运行
         if (!job.last_run_at || moment().isAfter(moment(job.last_run_at).add(5, 'hour')) ) {
+          console.log('add job', job.id, new Date())
           jobStack.push(job.id)
         }
         break;
       case 'daily':
         // 如果从没运行过，或者上次运行不在今天
         if ( !job.last_run_at || !moment().isSame(moment(job.last_run_at), 'day') ) {
+          console.log('add job', job.id, new Date())
           jobStack.push(job.id)
         }
         break;
@@ -167,6 +178,7 @@ function run(jobId) {
     var jobStack = localStorage.getItem('jobStack') ? JSON.parse(localStorage.getItem('jobStack')) : []
     if (jobStack && jobStack.length > 0) {
       var jobId = jobStack.shift();
+      saveJobStack(jobStack)
     } else {
       console.log('好像没有什么事需要我做...')
     }
@@ -194,9 +206,6 @@ function run(jobId) {
     })
   }
 
-  if (jobStack) {
-    saveJobStack(jobStack)
-  }
 }
 
 $( document ).ready(function() {
@@ -211,7 +220,7 @@ $( document ).ready(function() {
 chrome.notifications.onClicked.addListener(function (notificationId){
   if (notificationId.split('_').length > 0) {
     var batch = notificationId.split('_')[1]
-    if (batch) {
+    if (batch && batch.length > 0) {
       switch(batch){
         case 'baitiao':
           chrome.tabs.create({

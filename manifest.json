@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "京价保",
   "description": "自动为你申请京东价格保护",
-  "version": "1.9.8",
+  "version": "1.9.9",
 
   "background": {
     "page": "background.html",
@@ -15,7 +15,7 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
     {
-      "matches": ["*://*.jd.com/*", "*://*.jd.hk/*"],
+      "matches": ["*://*.jd.com/*", "*://*.jd.hk/*", "*://*.jdpay.com/*"],
       "js": [
         "static/zepto.min.js",
         "static/content_script.js"
@@ -31,5 +31,5 @@
     "48": "static/image/48.png",
     "128": "static/image/128.png" 
   },
-  "permissions": ["*://*.jd.com/*", "*://*.jd.hk/*", "webRequest", "webRequestBlocking", "alarms", "tabs", "notifications"]
+  "permissions": ["*://*.jd.com/*", "*://*.jd.hk/*", "*://*.jdpay.com/*", "webRequest", "webRequestBlocking", "alarms", "tabs", "notifications"]
 }

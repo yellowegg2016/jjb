@@ -122,6 +122,17 @@
                 </select>
               </div>
             </div>
+            <div id="job8" class="weui-cell weui-cell_select weui-cell_select-after">
+              <div class="weui-cell__bd">京东支付签到
+                <i class="reload"></i>
+              </div>
+              <div class="weui-cell__bd">
+                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job8_frequency">
+                  <option value="daily">每天</option>
+                  <option value="never">从不</option>
+                </select>
+              </div>
+            </div>
           </div>
       </form>
 
@@ -134,6 +145,7 @@
           <a href="https://order.jd.com/center/list.action" target="_blank">最近订单</a>
         </div>
         <div class="weui-cells orders">
+          <div class="no_order"> 暂时还没有订单 </div>
         </div>
       </div>
 
@@ -169,30 +181,33 @@
 
     </div>
     <script id="tpl-orders" type="text/html">
-      {{each orders order index}}
-        <div class="weui-cells__title time"> 下单时间： {{order.time}}</div>
-        {{each order.goods good i}}
-          <div class="weui-cell good">
-            <div class="weui-cell__bd">
-              <p class="good_title">{{good.name}}</p>
+      {{if orders && orders.length > 0}}
+        {{each orders order index}}
+          <div class="weui-cells__title time"> 下单时间： {{order.time}}</div>
+          {{each order.goods good i}}
+            <div class="weui-cell good">
+              <div class="weui-cell__bd">
+                <p class="good_title">{{good.name}}</p>
+              </div>
+              <div class="weui-cell__ft">
+                <span class="order_price">￥{{good.order_price}}</span>
+                {{if good.order_price > good.new_price}}
+                  <span class="new_price down">￥{{good.new_price}}</span>
+                {{else if good.order_price < good.new_price}}
+                  <span class="new_price up">￥{{good.new_price}}</span>
+                {{else}}
+                  <span class="new_price">￥{{good.new_price}}</span>
+                {{/if}}
+              </div>
             </div>
-            <div class="weui-cell__ft">
-              <span class="order_price">￥{{good.order_price}}</span>
-              {{if good.order_price > good.new_price}}
-                <span class="new_price down">￥{{good.new_price}}</span>
-              {{else if good.order_price < good.new_price}}
-                <span class="new_price up">￥{{good.new_price}}</span>
-              {{else}}
-                <span class="new_price">￥{{good.new_price}}</span>
-              {{/if}}
-            </div>
-          </div>
-          {{each good.success_log log}}
-            <p class="success_log">{{log}}</p>
+            {{each good.success_log log}}
+              <p class="success_log">{{log}}</p>
+            {{/each}}
           {{/each}}
         {{/each}}
-        
-      {{/each}}
+      {{else}}
+        <div class="no_order"> 暂时还没有订单 </div>
+      {{/if}}
     </script>
     <!-- body 最后 -->
     <script src="static/moment.min.js"></script>

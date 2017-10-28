@@ -1,6 +1,5 @@
 $( document ).ready(function() {
   var orders = JSON.parse(localStorage.getItem('jjb_orders'))
-  var last_check = localStorage.getItem('jjb_last_check')
   var login = localStorage.getItem('jjb_logged-in');
   var paid = localStorage.getItem('jjb_paid');
   if (login) {
@@ -23,12 +22,7 @@ $( document ).ready(function() {
   } else {
     orders = []
   }
-  if (last_check) {
-    $('.last_check').show()
-    $('#last_check').text(moment(last_check).locale('zh-cn').calendar())
-  } else {
-    $('.last_check').hide()
-  }
+ 
   if (orders) {
     var orders_html = template('tpl-orders', {
       orders: orders
@@ -42,7 +36,11 @@ $( document ).ready(function() {
       var jobId = job_elem.attr('id')
       if (jobId) {
         var last_run_time = localStorage.getItem(jobId + '_lasttime')
-        job_elem.find('.reload').attr('title', '上次运行： '+ moment(Number(last_run_time)).locale('zh-cn').calendar())
+        if (last_run_time) {
+          job_elem.find('.reload').attr('title', '上次运行： '+ moment(Number(last_run_time)).locale('zh-cn').calendar())
+        } else {
+          job_elem.find('.reload').attr('title', '从未执行')
+        }
       }
     }
   })
