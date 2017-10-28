@@ -129,7 +129,8 @@ function saveJobStack(jobStack) {
 
 function getJobs() {
   return _.map(jobs, (job) => {
-    job.last_run_at = localStorage.getItem('job' + job.id + '_lasttime')
+    var job_run_last_time = localStorage.getItem('job' + job.id + '_lasttime')
+    job.last_run_at = job_run_last_time ? parseInt(job_run_last_time) : null
     job.frequency = localStorage.getItem('job' + job.id + '_frequency') || job.frequency
     return job
   })
@@ -145,21 +146,18 @@ function findJobs() {
       case '2h':
         // 如果从没运行过，或者上次运行已经过去超过2小时，那么需要运行
         if (!job.last_run_at || moment().isAfter(moment(job.last_run_at).add(2, 'hour')) ) {
-          console.log('add job', job.id, new Date())
           jobStack.push(job.id)
         }
         break;
       case '5h':
         // 如果从没运行过，或者上次运行已经过去超过5小时，那么需要运行
         if (!job.last_run_at || moment().isAfter(moment(job.last_run_at).add(5, 'hour')) ) {
-          console.log('add job', job.id, new Date())
           jobStack.push(job.id)
         }
         break;
       case 'daily':
         // 如果从没运行过，或者上次运行不在今天
         if ( !job.last_run_at || !moment().isSame(moment(job.last_run_at), 'day') ) {
-          console.log('add job', job.id, new Date())
           jobStack.push(job.id)
         }
         break;
@@ -214,6 +212,9 @@ $( document ).ready(function() {
 
   // 每600分钟完全重载
   chrome.alarms.create('reload', {periodInMinutes: 600})
+
+  // 载入后马上运行一次任务查找
+  findJobs()
 })
 
 // 点击通知
