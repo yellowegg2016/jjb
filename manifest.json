@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "京价保",
   "description": "自动为你申请京东价格保护",
-  "version": "1.10.0",
+  "version": "1.10.1",
 
   "background": {
     "page": "background.html",

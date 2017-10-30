@@ -62,7 +62,7 @@ let mapFrequency = {
   '2h': 2 * 60,
   '5h': 5 * 60,
   'daily': 12 * 60,
-  'never': 24 * 60
+  'never': 99999
 }
 
 // This is to remove X-Frame-Options header, if present
@@ -199,9 +199,11 @@ function run(jobId) {
     }
     var last_run_at = localStorage.setItem('job' + job.id + '_lasttime', new Date().getTime())
     // 安排下一次运行
-    chrome.alarms.create('runJob_'+job.id, {
-      delayInMinutes: mapFrequency[job.frequency]
-    })
+    if (mapFrequency[job.frequency] < 1000) {
+      chrome.alarms.create('runJob_'+job.id, {
+        delayInMinutes: mapFrequency[job.frequency]
+      })
+    }
   }
 
 }
