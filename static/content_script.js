@@ -28,7 +28,7 @@ async function getNowPrice(sku) {
 }
 
 async function dealProduct(product, order_info) {
-  console.log('dealProduct', product)
+  console.log('dealProduct', product, order_info)
   var success_logs = []
   var product_name = product.find('.item-name .name').text()
   var order_price = Number(product.find('.item-opt .price').text().trim().substring(1))
@@ -49,7 +49,6 @@ async function dealProduct(product, order_info) {
     success_logs.push(order_success_logs.trim())
   }
 
-
   var new_price = await getNowPrice(order_sku[2])
   console.log(product_name + '进行价格对比:', new_price, ' Vs ', order_price)
   order_info.goods.push({
@@ -59,9 +58,17 @@ async function dealProduct(product, order_info) {
     success_log: success_logs,
     quantity: order_quantity
   })
-  if ( new_price > 0 && new_price < order_price ) {
-    $(product).find('.item-opt .apply').trigger( "tap" )
-    $(product).find('.item-opt .apply').trigger( "click" )
+  var applyBtn = $(product).find('.item-opt .apply')
+  var applyId = applyBtn.attr('id')
+  var lastApplyPrice = localStorage.getItem('jjb_order_' + applyId)
+  if (new_price > 0 && new_price < order_price  ) {
+    if (lastApplyPrice && Number(lastApplyPrice) <= new_price) {
+      console.log('Pass: ' + product_name + '当前价格上次已经申请过了:', new_price, ' Vs ', lastApplyPrice)
+      return 
+    }
+    applyBtn.trigger( "tap" )
+    applyBtn.trigger( "click" )
+    localStorage.setItem('jjb_order_' + applyId, new_price)
     chrome.runtime.sendMessage({
       text: "notice",
       batch: 'jiabao',
@@ -77,8 +84,8 @@ async function dealProduct(product, order_info) {
 async function dealOrder(order, orders) {
   var dealgoods = []
   var order_time = new Date(order.find('.title span').last().text().trim().split('：')[1])
-
-  console.log('订单时间', order_time)
+  var order_id = new Date(order.find('.title .order-code').text().trim().split('：')[1])
+  console.log('订单:', order_id, order_time)
   // 如果订单时间在15天以内
   if ( new Date().getTime() - order_time.getTime() < 15*24*3600*1000) {
     var order_info = {

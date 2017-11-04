@@ -2,7 +2,7 @@ $( document ).ready(function() {
   var orders = JSON.parse(localStorage.getItem('jjb_orders'))
   var login = localStorage.getItem('jjb_logged-in');
   var paid = localStorage.getItem('jjb_paid');
-  if (login) {
+  if (login && login == 'Y') {
     $("#login").hide()
   } else {
     $("#login").show()

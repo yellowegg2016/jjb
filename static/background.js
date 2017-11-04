@@ -169,7 +169,7 @@ function findJobs() {
 }
 
 // 执行组织交给我的任务
-function run(jobId) {
+function run(jobId, force) {
   console.log("run", jobId, new Date())
   // 如果没有指定任务ID 就从任务栈里面找一个
   if (!jobId) {
@@ -183,7 +183,7 @@ function run(jobId) {
   }
   var jobList = getJobs()
   var job = _.find(jobList, {id: jobId})
-  if (job) {
+  if (job && (job.frequency != 'never' || force)) {
     console.log("运行", job.title)
     if (job.mode == 'iframe') {
       $("#iframe").attr('src', job.src)
@@ -281,7 +281,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       var jobId = msg.content.split('job')[1]
       var jobList = getJobs()
       var job = _.find(jobList, {id: jobId})
-      run(jobId)
+      run(jobId, true)
       chrome.notifications.create( new Date().getTime().toString(), {
         type: "basic",
         title: "正在重新运行" + job.title,
