@@ -266,6 +266,18 @@ function CheckDom() {
     });
   };
 
+  // 京东金融首页
+  if ($("#index-qian-btn").length > 0 && $("#index-qian-btn .qian-text").text() == '签到') {
+    $("#index-qian-btn").trigger("tap")
+    $("#index-qian-btn").trigger("click")
+    chrome.runtime.sendMessage({
+      text: "checkin_notice",
+      title: "京价宝自动为您签到京东金融",
+      content: "应该是领到了很少的钢镚"
+    }, function (response) {
+      console.log("Response: ", response);
+    });
+  };
 
   // 领取 PLUS 券
   if ( $(".coupon-swiper .coupon-item").length > 0 ) {
@@ -433,7 +445,6 @@ function CheckDom() {
   };
 }
 
-// 上次运行检查的时间已经过去一天了
 $( document ).ready(function() {
   console.log('京价宝注入页面成功');
   setTimeout( function(){

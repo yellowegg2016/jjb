@@ -46,7 +46,7 @@
 .orders{
     overflow-y: auto;
     overflow-x: hidden;
-    height: 500px;
+    height: 520px;
 }
 
 .logo{
@@ -170,4 +170,20 @@
     padding: 0 1em;
     line-height: 2;
     margin-top: -6px;
+}
+
+.frequency_settings{
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 360px;
+}
+
+.priceProBox{
+    text-align: center;
+}
+
+#pricePro{
+    padding: 13px;
+    line-height: 3em;
+    color: #0e9c7f;
 }

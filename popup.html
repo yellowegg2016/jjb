@@ -15,7 +15,7 @@
           <div class="logo">
             <img src="static/image/48.png" height="48px">
           </div>
-          <p class="page__desc">京价宝 - 自动监控京东15天内的订单商品价格变化并自动提交价格保护申请。
+          <p class="page__desc">京价宝 - 自动监控京东订单商品价格变化并自动提交价格保护申请。
             <a href="#" id="pay" class="weui-btn weui-btn_mini weui-btn_primary">打赏</a>
           </p>
         </div>
@@ -35,8 +35,8 @@
               </div>
             </div>
           </div>
-          <div class="weui-cells__title">频率</div>
-          <div class="weui-cells weui-cells_form">
+          <div class="weui-cells__title">设置</div>
+          <div class="weui-cells weui-cells_form frequency_settings">
             <div id="job1" class="weui-cell weui-cell_select weui-cell_select-after">
               <div class="weui-cell__bd">价格保护
                 <i class="reload"></i>
@@ -50,6 +50,16 @@
                 </select>
               </div>
             </div>
+            <!-- <div id="priceProDays" class="weui-cell weui-cell_select weui-cell_select-after">
+              <div class="weui-cell__bd">检查订单时间
+              </div>
+              <div class="weui-cell__bd">
+                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="price_pro_days">
+                  <option value="15">最近15天</option>
+                  <option value="30">最近30天</option>
+                </select>
+              </div>
+            </div> -->
             <div id="job2" class="weui-cell weui-cell_select weui-cell_select-after">
               <div class="weui-cell__bd">精选优惠券
                 <i class="reload"></i>
@@ -133,6 +143,17 @@
                 </select>
               </div>
             </div>
+            <div id="job9" class="weui-cell weui-cell_select weui-cell_select-after">
+              <div class="weui-cell__bd">金融会员签到
+                <i class="reload"></i>
+              </div>
+              <div class="weui-cell__bd">
+                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job9_frequency">
+                  <option value="daily">每天</option>
+                  <option value="never">从不</option>
+                </select>
+              </div>
+            </div>
           </div>
       </form>
 
@@ -144,6 +165,9 @@
         </div>
         <div class="weui-cells orders">
           <div class="no_order"> 暂时还没有订单 </div>
+        </div>
+        <div class="priceProBox">
+          <a id="pricePro" href="javascript:;">查看价格保护页面</a>
         </div>
       </div>
 

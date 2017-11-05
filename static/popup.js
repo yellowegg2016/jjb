@@ -96,4 +96,12 @@ $( document ).ready(function() {
       console.log("Response: ", response);
     });
   })
+
+  $("#pricePro").on("click", function () {
+    chrome.runtime.sendMessage({
+      text: "openPricePro",
+    }, function (response) {
+      console.log("Response: ", response);
+    });
+  })
 })

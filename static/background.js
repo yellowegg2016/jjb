@@ -37,7 +37,7 @@ let jobs = [
   {
     id: '6',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fspe%2fqyy%2fmain%2findex.html%3fuserType%3d41',
-    title: '京东金融签到',
+    title: '京东金融惠赚钱签到',
     mode: 'iframe',
     frequency: 'daily'
   },
@@ -54,7 +54,14 @@ let jobs = [
     title: '京东支付签到',
     mode: 'iframe',
     frequency: 'daily'
-  }
+  },
+  {
+    id: '9',
+    src: 'https://passport.jd.com/new/login.aspx?ReturnUrl=https%3a%2f%2fvip.jr.jd.com%2f',
+    title: '京东金融会员签到',
+    mode: 'tab',
+    frequency: 'daily'
+  },
 ]
 
 
@@ -231,12 +238,7 @@ chrome.notifications.onClicked.addListener(function (notificationId){
           })
           break;
         case 'jiabao':
-          chrome.windows.create({
-            width: 420,
-            height: 800,
-            url: "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu",
-            type: "popup"
-          });
+          openPriceProPhoneMenu()
           break;
         default:
           chrome.tabs.create({
@@ -247,6 +249,14 @@ chrome.notifications.onClicked.addListener(function (notificationId){
   }
 })
 
+function openPriceProPhoneMenu() {
+  chrome.windows.create({
+    width: 420,
+    height: 800,
+    url: "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu",
+    type: "popup"
+  });
+}
 
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
   switch(msg.text){
@@ -266,12 +276,8 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       })
       break;
     case 'openLogin':
-      chrome.windows.create({
-        width: 420,
-        height: 800,
-        url: "https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu",
-        type: "popup"
-      });
+    case 'openPricePro':
+      openPriceProPhoneMenu()
       break;
     case 'option':
       localStorage.setItem('jjb_'+msg.title, msg.content);

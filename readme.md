@@ -6,6 +6,10 @@
 
 所有的操作都会在本地完成，因此如果你不打开 Chrome 浏览器，本插件也将不会运行。
 
+<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/pLGTRpZCggU3MF7auk9AChc4/sunoj/jjb'>
+  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/pLGTRpZCggU3MF7auk9AChc4/sunoj/jjb.svg' />
+</a>
+
 ## 主要功能
 
 * 自动监控最近15天购票的商品的价格变化，在商品降价时自动申请价格保护
@@ -14,6 +18,7 @@
 * 自动领京东优惠券
 * 自动领白条券
 * 自动领Plus券
+* 自动京东金融会员签到
 * 自动评价获取京豆奖励（暂未完成）
 
 ## 截图
@@ -43,6 +48,3 @@
 1. 将本项目的部分或全部代码和资源进行任何形式的再发行（尤其是上传到 Chrome 商店）
 2. 利用本项目的部分或全部代码和资源进行任何商业行为
 
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/pLGTRpZCggU3MF7auk9AChc4/sunoj/jjb'>
-  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/pLGTRpZCggU3MF7auk9AChc4/sunoj/jjb.svg' />
-</a>
