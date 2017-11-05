@@ -46,7 +46,7 @@ let jobs = [
     src: 'https://passport.jd.com/new/login.aspx?ReturnUrl=https://bean.jd.com/myJingBean/list',
     title: '店铺签到',
     mode: 'tab',
-    frequency: 'daily'
+    frequency: 'never'
   },
   {
     id: '8',
@@ -302,12 +302,29 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         message: msg.content,
         iconUrl: 'static/image/128.png'
       })
+      if (msg.batch == 'jiabao') {
+        var mute_audio = localStorage.getItem('mute_audio')
+        if (mute_audio && mute_audio == 'checked') {
+        } else {
+          var myAudio = new Audio();
+          myAudio.src = "static/audio/diamond.ogg";
+          myAudio.play();
+        }
+      }
+
       break;
     case 'checkin_notice':
       var mute_checkin = localStorage.getItem('mute_checkin')
       if (mute_checkin && mute_checkin == 'checked') {
         console.log('checkin', msg)
       } else {
+        var mute_audio = localStorage.getItem('mute_audio')
+        if (mute_audio && mute_audio == 'checked') {
+        } else {
+          var myAudio = new Audio();
+          myAudio.src = "static/audio/coin.mp3";
+          myAudio.play();
+        }
         chrome.notifications.create( new Date().getTime().toString() + '_' + msg.batch, {
           type: "basic",
           title: msg.title,

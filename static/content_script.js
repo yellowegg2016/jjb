@@ -124,7 +124,6 @@ async function getAllOrders() {
 var auto_login_html = "<p class='auto_login'><input type='checkbox' id='jjbAutoLogin'><label for='jjbAL'>记住密码，并为我自动登录（京价宝提供）</label></p>";
 
 
-
 function CheckBaitiaoCouponDom() {
   var time = 0;
   $(".coupon-list .js_coupon").each(function() {

@@ -15,7 +15,8 @@
           <div class="logo">
             <img src="static/image/48.png" height="48px">
           </div>
-          <p class="page__desc">京价宝 - 自动监控京东订单商品价格变化并自动提交价格保护申请。
+          <p class="page__desc">
+            <span id="notice">京东页面经常更新，唯有你的支持才能让京价宝保持更新。</span>
             <a href="#" id="pay" class="weui-btn weui-btn_mini weui-btn_primary">打赏</a>
           </p>
         </div>
@@ -34,6 +35,13 @@
                 <input class="weui-switch" type="checkbox" name="mute_coupon" data-persist="garlic" class="garlic-auto-save" data-domain="true">
               </div>
             </div>
+            <div class="weui-cell weui-cell_switch">
+              <div class="weui-cell__bd">不再播放提示音效</div>
+              <div class="weui-cell__ft">
+                <input class="weui-switch" type="checkbox" name="mute_audio" data-persist="garlic" class="garlic-auto-save" data-domain="true">
+              </div>
+            </div>
+             
           </div>
           <div class="weui-cells__title">设置</div>
           <div class="weui-cells weui-cells_form frequency_settings">
@@ -122,7 +130,7 @@
               </div>
             </div>
              <div id="job7" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">店铺签到
+              <div class="weui-cell__bd">浏览店铺签到
                 <i class="reload"></i>
               </div>
               <div class="weui-cell__bd">
@@ -191,7 +199,7 @@
               <div class="weui-dialog__bd weixin_pay"><img src="static/image/weixin_pay.png" height="248px"></div>
               <div class="weui-dialog__bd alipay_pay"><img src="static/image/alipay_pay.png" height="200px"></div>
               <div class="weui-dialog__bd">
-                <p>京东页面经常更新，唯有你的支持才能让京价宝保持更新</p>
+                <p>谢谢老板！</p>
               </div>
               <div class="weui-dialog__ft">
                   <a class="weui-dialog__btn weui-dialog__btn_primary" data-action="paid">付好了</a>

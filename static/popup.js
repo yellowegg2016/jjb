@@ -96,6 +96,18 @@ $( document ).ready(function() {
       console.log("Response: ", response);
     });
   })
+  var notices = [
+    '成功申请到价保、功能建议欢迎打赏附言。',
+    '京价宝并非免费插件，请您打赏任意金额获得使用授权。',
+    '理想情况下京价宝每月仅各种签到任务即可带来5元以上的等同现金收益。',
+    '京东页面经常更新，唯有你的支持才能让京价宝保持更新。',
+    '京价宝所有的功能均在本地完成，不会上传任何信息给任何人。',
+    '京价宝部分功能会开启一个固定的标签页，过一会儿它会自动关掉，不必紧张。',
+    '京价宝没有包含任何广告代码，你的打赏是开发者的唯一收入。',
+    '京东的登录有效期很短，请在登录时勾选保存密码自动登录以便京价宝自动完成工作。',
+    '京价宝全部代码已上传到GitHub，欢迎审查代码。',
+  ]
+  $("#notice").text(notices[Math.floor(Math.random() * notices.length)])
 
   $("#pricePro").on("click", function () {
     chrome.runtime.sendMessage({
