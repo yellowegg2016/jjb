@@ -174,15 +174,40 @@
         <div class="weui-cells orders">
           <div class="no_order"> 暂时还没有订单 </div>
         </div>
-        <div class="priceProBox">
+        <div class="bottom">
           <a id="pricePro" href="javascript:;">查看价格保护页面</a>
+          <a id="showChangeLog" href="javascript:;">查看最近更新</a>
         </div>
       </div>
 
-
+      <div id="changeLogs">
+        <div class="js_dialog" style="opacity: 1;">
+          <div class="weui-mask"></div>
+          <div class="weui-dialog">
+            <div class="weui-dialog__hd">
+              <strong class="weui-dialog__title">最近更新</strong>
+            </div>
+            <div class="weui-dialog__bd changelogs">
+              <p>1.12.1 改进样式；增加最近更新；</p>
+              <p>1.12.0 增加提示音效; 增加随机提示</p> 
+              <p>1.11.1 增加京东金融会员签到；增加了查看价格保护列表的链接；</p>
+              <p>1.11.0 更严格的防重复运行规则;同一个价格不再重复提交;</p>
+              <p>1.10.1 修复从不运行的项目在手动运行后会安排1天后再运行的bug</p>
+              <p>1.10.0 修复一个重要的任务运行频率的问题</p>
+              <p>1.9.9 增加京东支付签到</p>
+              <p>1.9.8 修复按天运行的任务的运行频率</p>
+              <p>1.9.7 店铺签到换用tab的模式运行</p>
+            </div>
+            <div class="weui-dialog__ft">
+              <a class="weui-dialog__btn weui-dialog__btn_primary" data-action="pay">太好了，打赏</a>
+              <a class="weui-dialog__btn weui-dialog__btn_default" data-action="dismiss">知道了</a>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="dialogs">
         <!--BEGIN dialog1-->
-        <div class="js_dialog" id="iosDialog1" style="opacity: 1;">
+        <div class="js_dialog" style="opacity: 1;">
             <div class="weui-mask"></div>
             <div class="weui-dialog">
               <div class="weui-dialog__hd"><strong class="weui-dialog__title">打赏任意金额</strong></div>

@@ -58,6 +58,8 @@ $( document ).ready(function() {
 
 
   $(".weui-dialog__ft a").on("click", function () {
+    $("#dialogs").hide()
+    $("#changeLogs").hide()
     if ($(this).data('action') == 'paid') {
       chrome.runtime.sendMessage({
         text: "paid"
@@ -65,9 +67,10 @@ $( document ).ready(function() {
         console.log("Response: ", response);
       });
     } else {
-
+      if ($(this).data('action') == 'pay') {
+        $("#dialogs").show()
+      }
     }
-    $("#dialogs").hide()
   })
 
 
@@ -75,6 +78,9 @@ $( document ).ready(function() {
     $("#dialogs").show()
   })
 
+  $("#showChangeLog").on("click", function () {
+    $("#changeLogs").show()
+  })
 
   $(".reload").on("click", function () {
     var job_elem = $(this).parent().parent()

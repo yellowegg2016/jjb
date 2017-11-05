@@ -74,7 +74,7 @@
     display: block;
 }
 
-#dialogs{
+#dialogs, #changeLogs{
     display: none;
 }
 
@@ -175,15 +175,30 @@
 .frequency_settings{
     overflow-y: auto;
     overflow-x: hidden;
-    height: 360px;
+    height: 320px;
 }
 
-.priceProBox{
-    text-align: center;
+.bottom{
 }
 
 #pricePro{
     padding: 13px;
     line-height: 3em;
     color: #0e9c7f;
+}
+
+#showChangeLog{
+    float: right;
+    line-height: 3em;
+    color: #5ab5fd;
+    padding-right: 10px;
+}
+
+.changelogs{
+    font-size: 14px;
+    padding: 10px;
+    text-align: left;
+    line-height: 2.2;
+    max-height: 320px;
+    overflow-y: auto;
 }
