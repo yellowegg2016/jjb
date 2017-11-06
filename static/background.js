@@ -303,24 +303,21 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         iconUrl: 'static/image/128.png'
       })
       if (msg.batch == 'jiabao') {
-        var mute_audio = localStorage.getItem('mute_audio')
-        if (mute_audio && mute_audio == 'checked') {
-        } else {
+        var play_audio = localStorage.getItem('play_audio')
+        if (play_audio && play_audio == 'checked') {
           var myAudio = new Audio();
           myAudio.src = "static/audio/diamond.ogg";
           myAudio.play();
         }
       }
-
       break;
     case 'checkin_notice':
       var mute_checkin = localStorage.getItem('mute_checkin')
       if (mute_checkin && mute_checkin == 'checked') {
         console.log('checkin', msg)
       } else {
-        var mute_audio = localStorage.getItem('mute_audio')
-        if (mute_audio && mute_audio == 'checked') {
-        } else {
+        var play_audio = localStorage.getItem('play_audio')
+        if (play_audio && play_audio == 'checked') {
           var myAudio = new Audio();
           myAudio.src = "static/audio/coin.mp3";
           myAudio.play();
