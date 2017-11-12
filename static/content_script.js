@@ -1,29 +1,47 @@
 // 京价宝
-async function getNowPrice(sku) {
-  var data = ''
-  try {
-    let resp = await fetch('https://item.m.jd.com/product/' + sku + '.html')
-    data = await resp.text()
-  } catch (e) {
+async function fetchProductPage(sku) {
+  var resp = await fetch('https://item.m.jd.com/product/' + sku + '.html')
+  var page = await resp.text()
+  if ($(page)[0] && $(page)[0].id == 'returnurl') {
+    var url = $(page)[0].value.replace("http://", "https://")
     var request = new XMLHttpRequest();
-    request.open('GET', 'https://item.m.jd.com/product/' + sku + '.html', false); 
+    request.open('GET', url, false);
     request.send(null);
     if (request.status === 200) {
-      data = request.responseText
+      var newData = request.responseText
+      return newData
     } else {
-      throw new  Error('GET Error')
+      throw new Error('GET Error')
     }
-  }
-  var product_name = $(data).find('.title-text').text()
-  var normal_price = $(data).find('#specJdPrice').text()
-  var spec_price = $(data).find('#spec_price').text()
-
-  console.log(product_name + '最新价格', Number(normal_price), 'or', Number(spec_price))
-
-  if (normal_price) {
-    return Number(normal_price)
   } else {
-    return Number(spec_price)
+    return page
+  }
+}
+
+// 获取价格
+async function getNowPrice(sku) {
+  var data = null
+  try {
+    data = await fetchProductPage(sku)
+  } catch (e) {
+    console.log('fetchProductPage', e)
+  }
+  if (data) {
+    var product_name = $(data).find('.title-text').text()
+    var normal_price = $(data).find('#specJdPrice').text()
+    var spec_price = $(data).find('#spec_price').text()
+    if (!product_name) {
+      console.log(data, $(data))
+    }
+    console.log(product_name + '最新价格', Number(normal_price), 'or', Number(spec_price))
+
+    if (normal_price) {
+      return Number(normal_price)
+    } else {
+      return Number(spec_price)
+    }
+  } else {
+    return null
   }
 }
 
@@ -52,6 +70,7 @@ async function dealProduct(product, order_info) {
   var new_price = await getNowPrice(order_sku[2])
   console.log(product_name + '进行价格对比:', new_price, ' Vs ', order_price)
   order_info.goods.push({
+    sku: order_sku[2],
     name: product_name,
     order_price: order_price,
     new_price: new_price,
@@ -80,14 +99,22 @@ async function dealProduct(product, order_info) {
   }
 }
 
-
-async function dealOrder(order, orders) {
+async function dealOrder(order, orders, setting) {
   var dealgoods = []
   var order_time = new Date(order.find('.title span').last().text().trim().split('：')[1])
-  var order_id = new Date(order.find('.title .order-code').text().trim().split('：')[1])
-  console.log('订单:', order_id, order_time)
-  // 如果订单时间在15天以内
-  if ( new Date().getTime() - order_time.getTime() < 15*24*3600*1000) {
+  var order_id = order.find('.title .order-code').text().trim().split('：')[1]
+  console.log('订单:', order_id, order_time, setting)
+
+  var proTime = 15 * 24 * 3600 * 1000
+  if (setting == '7') {
+    proTime = 7 * 24 * 3600 * 1000
+  }
+  if (setting == '30') {
+    proTime = 30 * 24 * 3600 * 1000
+  }
+
+  // 如果订单时间在设置的价保监控范围以内
+  if (new Date().getTime() - order_time.getTime() < proTime) {
     var order_info = {
       time: order_time,
       goods: []
@@ -104,12 +131,12 @@ async function dealOrder(order, orders) {
   }
 }
 
-async function getAllOrders() {
+async function getAllOrders(setting) {
   console.log('京价宝开始自动检查订单')
   let orders = []
   let dealorders = []
   $( "#datas li" ).each(function() {
-    dealorders.push(dealOrder($(this), orders))
+    dealorders.push(dealOrder($(this), orders, setting))
   });
   await Promise.all(dealorders)
   chrome.runtime.sendMessage({
@@ -122,6 +149,22 @@ async function getAllOrders() {
 }
 
 var auto_login_html = "<p class='auto_login'><input type='checkbox' id='jjbAutoLogin'><label for='jjbAL'>记住密码，并为我自动登录（京价宝提供）</label></p>";
+
+
+function mockClick(element) {
+  // DOM 2 Events
+  var dispatchMouseEvent = function (target, var_args) {
+    var e = document.createEvent("MouseEvents");
+    // If you need clientX, clientY, etc., you can call
+    // initMouseEvent instead of initEvent
+    e.initEvent.apply(e, Array.prototype.slice.call(arguments, 1));
+    target.dispatchEvent(e);
+  };
+  dispatchMouseEvent(element, 'mouseover', true, true);
+  dispatchMouseEvent(element, 'mousedown', true, true);
+  dispatchMouseEvent(element, 'click', true, true);
+  dispatchMouseEvent(element, 'mouseup', true, true);
+}
 
 
 function CheckBaitiaoCouponDom() {
@@ -152,6 +195,134 @@ function CheckBaitiaoCouponDom() {
   })
 }
 
+// 保存账号
+function saveAccount(account) {
+  chrome.runtime.sendMessage({
+    text: "saveAccount",
+    content: JSON.stringify(account)
+  }, function (response) {
+  });
+}
+
+// 获取账号信息
+function getAccount(type) {
+  chrome.runtime.sendMessage({
+    text: "getAccount",
+  }, function (response) {
+    if (response) {
+      var account = JSON.parse(response)
+      if (account && account.username && account.password) {
+        autoLogin(account, type)
+      } else {
+        chrome.runtime.sendMessage({
+          text: "notLogin",
+        }, function (response) {
+          console.log("Response: ", response);
+        });
+      }
+    }
+  });
+}
+// 获取设置
+function getSetting(name, cb) {
+  chrome.runtime.sendMessage({
+    text: "getSetting",
+    content: name
+  }, function (response) {
+    if (response) {
+      cb(response)
+    }
+    console.log("getSetting Response: ", response);
+  });
+}
+
+
+// 自动登录
+function autoLogin(account, type) {
+  if (type == 'pc') {
+    $(".login-tab-r a").trigger("click")
+    $("#loginname").val(account.username)
+    $("#nloginpwd").val(account.password)
+    setTimeout(function () {
+      mockClick($(".login-btn a")[0])
+    }, 500)
+  } else {
+    $("#username").val(account.username)
+    $("#password").val(account.password)
+    $("#loginBtn").addClass("btn-active")
+    setTimeout(function () {
+      if ($("#username").val() && $("#password").val()) {
+        mockClick($("#loginBtn")[0])
+      }
+    }, 500)
+  }
+}
+
+
+// 转存老的账号
+function resaveAccount() {
+  var jjb_username = localStorage.getItem('jjb_username')
+  var jjb_password = localStorage.getItem('jjb_password')
+  if (jjb_username && jjb_password) {
+    localStorage.removeItem('jjb_username')
+    localStorage.removeItem('jjb_password')
+    saveAccount({
+      username: jjb_username,
+      password: jjb_password
+    })
+  }
+}
+
+// 自动评论
+function autoReview(setting) {
+  if (setting == 'checked') {
+    if ($(".commstar-group").length > 0) {
+      $('.commstar .star5').trigger("tap")
+      $('.commstar .star5').trigger("click")
+    }
+    if ($(".f-goods").length > 0) {
+      $('.fop-main .star5').trigger("tap")
+      $('.fop-main .star5').trigger("click")
+      $('.f-item .f-textarea textarea').val('感觉不错，价格也很公道，值的购买！')
+    };
+    setTimeout(function () {
+      $('.btn-submit').trigger("tap")
+      $('.btn-submit').trigger("click")
+    }, 500)
+  }
+}
+
+
+// 自动浏览店铺
+function autoVisitShop(setting) {
+  if (setting != 'never') {
+    console.log('开始自动访问店铺领京豆')
+    var time = 0;
+    $(".bean-shop-list li").each(function () {
+      var that = $(this)
+      if ($(that).find('.s-btn').text() == '去签到') {
+        setTimeout(function () {
+          chrome.runtime.sendMessage({
+            text: "create_tab",
+            batch: "bean",
+            content: JSON.stringify({
+              index: 0,
+              url: $(that).find('.s-btn').attr('href'),
+              active: "false",
+              pinned: "true"
+            })
+          }, function (response) {
+            console.log("Response: ", response);
+          });
+        }, time)
+        time += 30000;
+      }
+    })
+  }
+}
+
+
+
 function CheckDom() {
   // 是否登录
   if ( $(".us-line .us-name") && $(".us-line .us-name").length > 0 ) {
@@ -163,65 +334,46 @@ function CheckDom() {
     });
   };
 
-  // 记住密码
+  // 账号登录
+  // 手机版登录页
   if ( $(".loginPage").length > 0 ) {
-    console.log('登录')
-    // 打开了登录页面
-    chrome.runtime.sendMessage({
-      text: "notLogin",
-    }, function(response) {
-      console.log("Response: ", response);
-    });
-
-    var jjb_username = localStorage.getItem('jjb_username')
-    var jjb_password = localStorage.getItem('jjb_password')
-
-    if (jjb_username && jjb_password) {
-      var loginBtn = $("#loginBtn")
-      $("#username").val(jjb_username)
-      $("#password").val(jjb_password)
-      $("#loginBtn").addClass("btn-active")
-      setTimeout( function(){
-        document.getElementById("loginBtn").click();
-      }, 500)
-    } else {
-      $(auto_login_html).insertAfter( ".loginPage .notice" )
-      $("#loginBtn").on("click", function () {
-        if ($("#jjbAutoLogin").is(":checked")) {
-          var username = $("#username").val()
-          var password = $("#password").val()
-          localStorage.setItem('jjb_username', username)
-          localStorage.setItem('jjb_password', password)
+    resaveAccount()
+    getAccount('m')
+    $(auto_login_html).insertAfter( ".loginPage .notice" )
+    $("#loginBtn").on("click", function () {
+      if ($("#jjbAutoLogin").is(":checked")) {
+        var username = $("#username").val()
+        var password = $("#password").val()
+        // 保存账号和密码
+        if (username && password) {
+          saveAccount({
+            username: username,
+            password: password
+          })
         }
-      })
-    }
+      }
+    })
+  };
+  // PC版登录页
+  if ($(".login-tab-r ").length > 0) {
+    resaveAccount()
+    getAccount('pc')
+    $(auto_login_html).insertAfter("#formlogin")
+    $(".login-btn a").on("click", function () {
+      if ($("#jjbAutoLogin").is(":checked")) {
+        var username = $("#loginname").val()
+        var password = $("#nloginpwd").val()
+        // 保存账号和密码
+        if (username && password) {
+          saveAccount({
+            username: username,
+            password: password
+          })
+        }
+      }
+    })
   };
 
-
-  // PC版自动登录
-  if ( $(".login-tab-r ").length > 0 ) {
-    var jjb_username = localStorage.getItem('jjb_username')
-    var jjb_password = localStorage.getItem('jjb_password')
-    $(".login-tab-r a").trigger( "click" )
-    if (jjb_username && jjb_password) {
-      $("#loginname").val(jjb_username)
-      $("#nloginpwd").val(jjb_password)
-      setTimeout( function(){
-        console.log(".login-btn a")
-        $(".login-btn a").trigger( "click" )
-      }, 500)
-    } else {
-      $(auto_login_html).insertAfter( "#formlogin" )
-      $(".login-btn a").on("click", function () {
-        if ($("#jjbAutoLogin").is(":checked")) {
-          var username = $("#loginname").val()
-          var password = $("#nloginpwd").val()
-          localStorage.setItem('jjb_username', username)
-          localStorage.setItem('jjb_password', password)
-        }
-      })
-    }
-  };
 
   // 会员页签到
   if ( $(".sign-pop").length && !$(".sign-pop").hasClass('signed')) {
@@ -230,6 +382,7 @@ function CheckDom() {
     $(".sign-pop").trigger( "click" )
     chrome.runtime.sendMessage({
       text: "checkin_notice",
+      batch: "bean",
       title: "京价宝自动为您签到领京豆",
       content: "具体领到多少就不清楚了，大概是3个"
     }, function(response) {
@@ -258,6 +411,7 @@ function CheckDom() {
     $(".signInBtn").trigger( "click" )
     chrome.runtime.sendMessage({
       text: "checkin_notice",
+      batch: "bean",
       title: "京价宝自动为您签到京东支付",
       content: "应该是领到了几个京豆"
     }, function(response) {
@@ -332,27 +486,7 @@ function CheckDom() {
 
   // 自动访问店铺领京豆
   if ( $(".bean-shop-list").length > 0 ) {
-    console.log('开始自动访问店铺领京豆')
-    var time = 0;
-    $(".bean-shop-list li").each(function() {
-      var that = $(this)
-      if ($(that).find('.s-btn').text() == '去签到') {
-        setTimeout( function(){
-          chrome.runtime.sendMessage({
-            text: "create_tab",
-            content: JSON.stringify({
-              index: 0,
-              url: $(that).find('.s-btn').attr('href'),
-              active: "false",
-              pinned: "true"
-            })
-          }, function(response) {
-            console.log("Response: ", response);
-          });         
-        }, time)
-        time += 30000;
-      }
-    })
+    getSetting('job7_frequency', autoVisitShop)
   };
 
 
@@ -406,22 +540,32 @@ function CheckDom() {
     })
   };
 
+  // 自动领取京东金融铂金会员京东支付返利
+  if ($("#react-root .react-root .react-view").length > 0) {
+      $("#react-root .react-root .react-view img").each(function() {
+        var that = $(this)
+        if (that.attr("src") && that.width() > 40) {
+          mockClick(that[0])
+          var amount = that.parent().parent().prev().find('span').last().text()
+          var content = "应该是领到了" + amount + '元的返利。'
+          if (amount > 5) {
+            content += "求打赏"
+          }
+          chrome.runtime.sendMessage({
+            text: "checkin_notice",
+            batch: "jrfx",
+            title: "京价宝自动为您领取铂金会员支付返利",
+            content: content
+          }, function (response) {
+            console.log("Response: ", response);
+          });
+        }
+    })
+  }
 
   // 自动评价 
   if ($(".mycomment-form").length > 0) {
-    if ($(".commstar-group").length > 0) {
-      $('.commstar .star5').trigger( "tap" )
-      $('.commstar .star5').trigger( "click" )
-    }
-    if ( $(".f-goods").length > 0 ) {
-      $('.fop-main .star5').trigger( "tap" )
-      $('.fop-main .star5').trigger( "click" )
-      $('.f-item .f-textarea textarea').val('感觉不错，价格也很公道，值的购买！')
-    };
-    setTimeout( function(){
-      $('.btn-submit').trigger( "tap" )
-      $('.btn-submit').trigger( "click" )
-    }, 500)
+    getSetting('auto_review', autoReview)
   };
 
   // 价格保护
@@ -437,11 +581,13 @@ function CheckDom() {
         console.log("Response: ", response);
       });
       console.log('成功获取价格保护商品列表', new Date())
-      getAllOrders()
+
+      getSetting('price_pro_days', getAllOrders)
     } else {
       console.log('好尴尬，最近没有买东西..', new Date())
     }
   };
+
 }
 
 $( document ).ready(function() {

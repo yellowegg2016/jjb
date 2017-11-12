@@ -44,4 +44,11 @@
     font-size: 18px;
     color: #fff;
     padding-top: 60%;
-  }
+}
+
+.jjb iframe{
+    border: 0;
+    text-align: center;
+    width: 100%;
+    height: 200px;
+}

@@ -4,173 +4,235 @@
     <meta charset="UTF-8">
     <script src="static/jquery.js"></script>
     <script src="static/garlic.js"></script>
+    <script src="static/tippy.min.js"></script>
     <!-- head 中 -->
     <link rel="stylesheet" href="static/style/weui.min.css">
     <link rel="stylesheet" href="static/style/popup.css">
+    <link rel="stylesheet" href="static/style/tippy.css">
   </head>
   <body>
     <div class="popup">
       <div class="settings">
-        <div class="page__hd">
-          <div class="logo">
-            <img src="static/image/48.png" height="48px">
+        <div class="weui-tab">
+          <div class="weui-navbar">
+            <div class="weui-navbar__item  weui-bar__item_on" data-type="frequency_settings">
+              任务设置
+            </div>
+            <div class="weui-navbar__item" data-type="notice_settings">
+              通知设置
+            </div>
+            <div class="weui-navbar__item" data-type="other_settings">
+              其他设置
+            </div>
           </div>
+          <div class="weui-tab__panel">
+            <form id="settings"  method="POST">
+              
+              <div class="frequency_settings settings_box" >
+                <div class="weui-cells__title">任务频率</div>
+                <div class="weui-cells weui-cells_form">
+                  <div id="job1" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd" >
+                      <span class="tippy" title="价格保护默认只申请15天内下单的商品">价格保护</span>
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job1_frequency">
+                        <option value="2h">每2小时</option>
+                        <option value="5h">每5小时</option>
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="job2" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd tippy">
+                      <span class="tippy">精选优惠券</span>
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job2_frequency">
+                        <option value="2h">每2小时</option>
+                        <option value="5h">每5小时</option>
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="job3" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="当然啦，你得先是PLUS会员才能领到">PLUS券</span>
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job3_frequency">
+                        <option value="2h">每2小时</option>
+                        <option value="5h">每5小时</option>
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="job4" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="白条券是个好东西啊">白条券</span>
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job4_frequency">
+                        <option value="2h">每2小时</option>
+                        <option value="5h">每5小时</option>
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="job5" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="京东会员移动页每日签到">京豆签到</span>
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job5_frequency">
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="job6" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="京东金融会员每日签到有钢镚奖励">钢镚签到</span>
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job6_frequency">
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="job7" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="这个功能是自动浏览店铺签到得京东，会开一些隐藏标签。">浏览店铺签到</span>
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job7_frequency">
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="job8" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd" >
+                      <span>京东支付签到</span>
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job8_frequency">
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="job9" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd">
+                      <span class="tippy"  title="金融会员每日签到，也会开标签页">金融会员签到</span> 
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job9_frequency">
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="job10" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd">
+                      <span class="tippy"  title="金融铂金会员京东支付返利1%，需要在7天内领取">铂金会员返利</span>
+                      <i class="reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job10_frequency">
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="notice_settings settings_box" style="display: none">
+                <div class="weui-cells__title">提醒和通知</div>
+                <div class="weui-cells weui-cells_form">
+                  <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">不再提示签到通知</div>
+                    <div class="weui-cell__ft">
+                      <input class="weui-switch" type="checkbox" name="mute_checkin" data-persist="garlic" class="garlic-auto-save" data-domain="true">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">不再提示领券通知</div>
+                    <div class="weui-cell__ft">
+                      <input class="weui-switch" type="checkbox" name="mute_coupon" data-persist="garlic" class="garlic-auto-save" data-domain="true">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">隐藏价保商品信息</div>
+                    <div class="weui-cell__ft">
+                      <input class="weui-switch" type="checkbox" name="hide_good" data-persist="garlic" class="garlic-auto-save" data-domain="true">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">播放提示音效</div>
+                    <div class="weui-cell__ft">
+                      <input class="weui-switch" type="checkbox" name="play_audio" data-persist="garlic" class="garlic-auto-save" data-domain="true">
+                    </div>
+                  </div>
+              
+                </div>
+              </div>
+              <div class="other_settings settings_box" style="display: none">
+                <div class="weui-cells__title">其他</div>
+                <div class="weui-cells weui-cells_form">
+                  <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="京东价格保护的时间不同商品不同，大部分商品是7天价保">监控订单范围</span>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="price_pro_days">
+                        <option value="7">最近7天</option>
+                        <option value="15">最近15天</option>
+                        <option value="30">最近30天</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">自动补全并提交评价</div>
+                    <div class="weui-cell__ft">
+                      <input class="weui-switch" type="checkbox" name="auto_review" data-persist="garlic" class="garlic-auto-save" data-domain="true">
+                    </div>
+                  </div>
+                </div>
+                <div class="other_actions">
+                  <p>
+                    <a href="#" id="clearAccount" class="weui-btn weui-btn_warn tippy" title="在登录时勾选记住密码可保存新的密码">清除已保存的密码</a>
+                  </p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="tips page__hd">
           <p class="page__desc">
             <span id="notice">京东页面经常更新，唯有你的支持才能让京价宝保持更新。</span>
             <a href="#" id="pay" class="weui-btn weui-btn_mini weui-btn_primary">打赏</a>
           </p>
         </div>
-        <form id="settings"  method="POST">
-          <div class="weui-cells__title">通知</div>
-          <div class="weui-cells weui-cells_form">
-            <div class="weui-cell weui-cell_switch">
-              <div class="weui-cell__bd">不再提示签到通知</div>
-              <div class="weui-cell__ft">
-                <input class="weui-switch" type="checkbox" name="mute_checkin" data-persist="garlic" class="garlic-auto-save" data-domain="true">
-              </div>
-            </div>
-            <div class="weui-cell weui-cell_switch">
-              <div class="weui-cell__bd">不再提示领券通知</div>
-              <div class="weui-cell__ft">
-                <input class="weui-switch" type="checkbox" name="mute_coupon" data-persist="garlic" class="garlic-auto-save" data-domain="true">
-              </div>
-            </div>
-            <div class="weui-cell weui-cell_switch">
-              <div class="weui-cell__bd">播放提示音效</div>
-              <div class="weui-cell__ft">
-                <input class="weui-switch" type="checkbox" name="play_audio" data-persist="garlic" class="garlic-auto-save" data-domain="true">
-              </div>
-            </div>
-             
-          </div>
-          <div class="weui-cells__title">设置</div>
-          <div class="weui-cells weui-cells_form frequency_settings">
-            <div id="job1" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">价格保护
-                <i class="reload"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job1_frequency">
-                  <option value="2h">每2小时</option>
-                  <option value="5h">每5小时</option>
-                  <option value="daily">每天</option>
-                  <option value="never">从不</option>
-                </select>
-              </div>
-            </div>
-            <!-- <div id="priceProDays" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">检查订单时间
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="price_pro_days">
-                  <option value="15">最近15天</option>
-                  <option value="30">最近30天</option>
-                </select>
-              </div>
-            </div> -->
-            <div id="job2" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">精选优惠券
-                <i class="reload"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job2_frequency">
-                  <option value="2h">每2小时</option>
-                  <option value="5h">每5小时</option>
-                  <option value="daily">每天</option>
-                  <option value="never">从不</option>
-                </select>
-              </div>
-            </div>
-            <div id="job3" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">PLUS券
-                <i class="reload"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job3_frequency">
-                  <option value="2h">每2小时</option>
-                  <option value="5h">每5小时</option>
-                  <option value="daily">每天</option>
-                  <option value="never">从不</option>
-                </select>
-              </div>
-            </div>
-            <div id="job4" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">白条券
-                <i class="reload"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job4_frequency">
-                  <option value="2h">每2小时</option>
-                  <option value="5h">每5小时</option>
-                  <option value="daily">每天</option>
-                  <option value="never">从不</option>
-                </select>
-              </div>
-            </div>
-            <div id="job5" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">京豆签到
-                <i class="reload"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job5_frequency">
-                  <option value="daily">每天</option>
-                  <option value="never">从不</option>
-                </select>
-              </div>
-            </div>
-            <div id="job6" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">钢镚签到
-                <i class="reload"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job6_frequency">
-                  <option value="daily">每天</option>
-                  <option value="never">从不</option>
-                </select>
-              </div>
-            </div>
-             <div id="job7" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">浏览店铺签到
-                <i class="reload"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job7_frequency">
-                  <option value="daily">每天</option>
-                  <option value="never">从不</option>
-                </select>
-              </div>
-            </div>
-            <div id="job8" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">京东支付签到
-                <i class="reload"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job8_frequency">
-                  <option value="daily">每天</option>
-                  <option value="never">从不</option>
-                </select>
-              </div>
-            </div>
-            <div id="job9" class="weui-cell weui-cell_select weui-cell_select-after">
-              <div class="weui-cell__bd">金融会员签到
-                <i class="reload"></i>
-              </div>
-              <div class="weui-cell__bd">
-                <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job9_frequency">
-                  <option value="daily">每天</option>
-                  <option value="never">从不</option>
-                </select>
-              </div>
-            </div>
-          </div>
-      </form>
-
       </div>
       <div class="orderlist">
         <div class="weui-cells__title">
           <a href="https://order.jd.com/center/list.action" target="_blank">最近订单</a>
-          <a href="https://order.jd.com/center/list.action" target="_blank">最近订单</a>
-          <a id="login" href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" style="display: none">登录京东</a>
+          <a id="login" href="javascript:;" title="京东的登录有效期很短，请在登录时勾选保存密码自动登录以便京价宝自动完成工作。" class="weui-btn weui-btn_mini weui-btn_primary tippy" style="display: none">登录京东</a>
         </div>
         <div class="weui-cells orders">
           <div class="no_order"> 暂时还没有订单 </div>
@@ -178,7 +240,7 @@
         <div class="bottom">
           <a id="pricePro" href="javascript:;">查看价格保护页面</a>
           <a id="showChangeLog" href="javascript:;">查看最近更新</a>
-          <a id="openGithub" href="https://github.com/sunoj/jjb" target="_blank">项目源代码</a>
+          <a id="openGithub" class="tippy" href="https://github.com/sunoj/jjb" title="点击查看本插件的全部代码" target="_blank">项目源代码</a>
         </div>
       </div>
 
@@ -207,6 +269,66 @@
           </div>
         </div>
       </div>
+
+      <div id="feedbackDialags">
+        <div class="js_dialog" style="opacity: 1;">
+          <div class="weui-mask"></div>
+          <div class="weui-dialog">
+            <div class="weui-dialog__hd">
+              <strong class="weui-dialog__title">反馈建议</strong>
+            </div>
+            <div class="weui-dialog__bd changelogs">
+              <form id="feedback">
+                <ul class="weui-cells__container">
+                  <li style="display:;">
+                    <div>
+                      <div class="weui-cells__title">
+                        <label for="email">邮箱</label>
+                      </div>
+                      <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                          <div class="weui-cell__bd">
+                            <input id="email" name="email" type="email" required="required" class="weui-input">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="weui-cells__tips" style="display:none;"></div>
+                    </div>
+                  </li>
+                  <li style="display:;">
+                    <div>
+                      <div class="weui-cells__title">
+                        <label for="content">反馈内容</label>
+                      </div>
+                      <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                          <div class="weui-cell__bd">
+                            <textarea id="content" name="content" type="text" required="required" class="weui-textarea"></textarea>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <div class="weui-btn-area">
+                  <a class="weui-btn weui-btn_primary" id="submit">提交</a>
+                </div>
+              </form>
+              <div id="feedbackResult">
+                <div class="weui-msg">
+                  <div class="weui-msg__icon-area">
+                    <i class="weui-icon-success weui-icon_msg"></i>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
       <div id="dialogs">
         <!--BEGIN dialog1-->
         <div class="js_dialog" style="opacity: 1;">
@@ -244,7 +366,9 @@
           {{each order.goods good i}}
             <div class="weui-cell good">
               <div class="weui-cell__bd">
-                <p class="good_title">{{good.name}}</p>
+                <p class="good_title">
+                  <a href="https://jjb.zaoshu.so/good/{{good.sku}}" target="_blank">{{good.name}}</a>
+                </p>
               </div>
               <div class="weui-cell__ft">
                 <span class="order_price">￥{{good.order_price}}</span>

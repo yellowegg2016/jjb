@@ -2,6 +2,7 @@ $( document ).ready(function() {
   var orders = JSON.parse(localStorage.getItem('jjb_orders'))
   var login = localStorage.getItem('jjb_logged-in');
   var paid = localStorage.getItem('jjb_paid');
+  var account = localStorage.getItem('jjb_account');
   if (login && login == 'Y') {
     $("#login").hide()
   } else {
@@ -13,6 +14,28 @@ $( document ).ready(function() {
   } else {
     $("#dialogs").show()
   }
+
+  if (!account) {
+    $("#clearAccount").addClass('weui-btn_disabled')
+  }
+
+  // tippy
+  setTimeout(function () {
+    tippy('.tippy', {
+      animation: 'scale',
+      duration: 20,
+      arrow: true
+    })
+  }, 800)
+
+
+
+  $('.weui-navbar__item').on('click', function () {
+    $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+    var type = $(this).data('type')
+    $('.settings_box').hide()
+    $('.' + type).show()
+  });
 
   if (orders) {
     orders = orders.map(function (order) {
@@ -95,6 +118,14 @@ $( document ).ready(function() {
     }
   })
 
+  $("#clearAccount").on("click", function () {
+    localStorage.removeItem('jjb_account')
+    chrome.tabs.create({
+      url: "https://passport.jd.com/uc/login"
+    })
+  })
+  
+
   $("#login").on("click", function () {
     chrome.runtime.sendMessage({
       text: "openLogin",
@@ -109,7 +140,6 @@ $( document ).ready(function() {
     '京东页面经常更新，唯有你的支持才能让京价宝保持更新。',
     '京价宝所有的功能均在本地完成，不会上传任何信息给任何人。',
     '京价宝部分功能会开启一个固定的标签页，过一会儿它会自动关掉，不必紧张。',
-    '京价宝没有包含任何广告代码，你的打赏是开发者的唯一收入。',
     '京东的登录有效期很短，请在登录时勾选保存密码自动登录以便京价宝自动完成工作。',
     '京价宝全部代码已上传到GitHub，欢迎审查代码。',
   ]

@@ -62,6 +62,13 @@ let jobs = [
     mode: 'tab',
     frequency: 'daily'
   },
+  {
+    id: '10',
+    src: 'https://plogin.m.jd.com/user/login.action?appid=100&returnurl=https%3a%2f%2fm.jr.jd.com%2fmjractivity%2frn%2fplatinum_members_center%2findex.html%3fpage%3dFXDetailPage',
+    title: '金融铂金会员支付返利',
+    mode: 'iframe',
+    frequency: 'daily'
+  },
 ]
 
 
@@ -230,19 +237,27 @@ $( document ).ready(function() {
 chrome.notifications.onClicked.addListener(function (notificationId){
   if (notificationId.split('_').length > 0) {
     var batch = notificationId.split('_')[1]
-    if (batch && batch.length > 0) {
+    if (batch && batch.length > 1) {
       switch(batch){
         case 'baitiao':
           chrome.tabs.create({
-            url: "http://vip.jr.jd.com/coupon/myCoupons?default=IOU"
+            url: "https://vip.jr.jd.com/coupon/myCoupons?default=IOU"
+          })
+          break;
+        case 'bean':
+          chrome.tabs.create({
+            url: "http://bean.jd.com/myJingBean/list"
           })
           break;
         case 'jiabao':
           openPriceProPhoneMenu()
           break;
+        case 'jrfx':
+          openFXDetailPage()
+          break;
         default:
           chrome.tabs.create({
-            url: "http://search.jd.com/Search?coupon_batch="+batch
+            url: "https://search.jd.com/Search?coupon_batch="+batch
           })
       }
     }
@@ -258,13 +273,33 @@ function openPriceProPhoneMenu() {
   });
 }
 
+function openFXDetailPage() {
+  chrome.windows.create({
+    width: 420,
+    height: 800,
+    url: "https://plogin.m.jd.com/user/login.action?appid=100&returnurl=https%3a%2f%2fm.jr.jd.com%2fmjractivity%2frn%2fplatinum_members_center%2findex.html%3fpage%3dFXDetailPage",
+    type: "popup"
+  });
+}
+
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
   switch(msg.text){
     case 'isLogin':
       localStorage.setItem('jjb_logged-in', 'Y');
       break;
-    case 'notLogin':
-      localStorage.setItem('jjb_logged-in', 'N');
+    case 'saveAccount':
+      var content = JSON.parse(msg.content)
+      if (content.username && content.password) {
+        localStorage.setItem('jjb_account', msg.content);
+      }
+      break;
+    case 'getSetting':
+      var setting = localStorage.getItem(msg.content)
+      return sendResponse(setting)
+      break;
+    case 'getAccount':
+      var account = localStorage.getItem('jjb_account')
+      return sendResponse(account)
       break;
     case 'paid':
       localStorage.setItem('jjb_paid', 'Y');
@@ -296,20 +331,25 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       })
       break;
     case 'notice':
+      if (msg.batch == 'jiabao') {
+        var play_audio = localStorage.getItem('play_audio')
+        var hide_good = localStorage.getItem('hide_good')
+        if (play_audio && play_audio == 'checked') {
+          var myAudio = new Audio();
+          myAudio.src = "static/audio/diamond.ogg";
+          myAudio.play();
+        }
+        if (hide_good && hide_good == 'checked') {
+          msg.content = "具体成功没成功我也不清楚，你自己点开看看吧。"
+        }
+      }
       chrome.notifications.create( new Date().getTime().toString() + '_' + msg.batch, {
         type: "basic",
         title: msg.title,
         message: msg.content,
         iconUrl: 'static/image/128.png'
       })
-      if (msg.batch == 'jiabao') {
-        var play_audio = localStorage.getItem('play_audio')
-        if (play_audio && play_audio == 'checked') {
-          var myAudio = new Audio();
-          myAudio.src = "static/audio/diamond.ogg";
-          myAudio.play();
-        }
-      }
+      
       break;
     case 'checkin_notice':
       var mute_checkin = localStorage.getItem('mute_checkin')
@@ -338,7 +378,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         active: content.active == 'true',
         pinned: content.pinned == 'true'
       }, function (tab) {
-        chrome.alarms.create('closeTab_'+tab.id, {delayInMinutes: 1})
+        chrome.alarms.create('closeTab_' + tab.id, { delayInMinutes: 1 })
       })
       break;
     case 'remove_tab':

@@ -6,7 +6,9 @@
     padding: 10px;
 }
 
-
+.weui-dialog {
+    max-width: 340px;
+}
 .page__desc{
     padding: 5px 10px;
 }
@@ -14,14 +16,19 @@
     display: inline-block;
     width: 45%;
     float: left;
+    background: #fafafa;
 }
 
 .orderlist{
     width: 54%;
     float: right;
     overflow: hidden;
+    background: #fafafa;
 }
 
+.other_actions{
+    padding: 10px;
+}
 .no_order{
   padding: 5em;
   text-align: center;
@@ -171,11 +178,18 @@
     line-height: 2;
     margin-top: -6px;
 }
+.weui-navbar+.weui-tab__panel{
+    padding-top: 35px;
+}
 
-.frequency_settings{
+.weui-navbar__item{
+    padding: 7px 0;
+}
+
+.settings_box{
     overflow-y: auto;
     overflow-x: hidden;
-    height: 320px;
+    height: 490px;
 }
 
 .bottom{
@@ -201,4 +215,12 @@
     line-height: 2.2;
     max-height: 320px;
     overflow-y: auto;
+}
+
+#feedbackDialags .weui-dialog{
+    background-color: #f3f3f3;
+}
+
+#feedbackResult, #feedbackDialags{
+    display: none;
 }
