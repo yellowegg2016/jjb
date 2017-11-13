@@ -229,9 +229,7 @@ function getSetting(name, cb) {
     text: "getSetting",
     content: name
   }, function (response) {
-    if (response) {
-      cb(response)
-    }
+    cb(response)
     console.log("getSetting Response: ", response);
   });
 }
@@ -324,6 +322,9 @@ function autoVisitShop(setting) {
 
 
 function CheckDom() {
+  // 转存账号
+  resaveAccount()
+  
   // 是否登录
   if ( $(".us-line .us-name") && $(".us-line .us-name").length > 0 ) {
     console.log('已经登录')
@@ -337,7 +338,6 @@ function CheckDom() {
   // 账号登录
   // 手机版登录页
   if ( $(".loginPage").length > 0 ) {
-    resaveAccount()
     getAccount('m')
     $(auto_login_html).insertAfter( ".loginPage .notice" )
     $("#loginBtn").on("click", function () {
@@ -356,7 +356,6 @@ function CheckDom() {
   };
   // PC版登录页
   if ($(".login-tab-r ").length > 0) {
-    resaveAccount()
     getAccount('pc')
     $(auto_login_html).insertAfter("#formlogin")
     $(".login-btn a").on("click", function () {
