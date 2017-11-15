@@ -511,13 +511,13 @@ function CheckDom() {
 
   // 领取精选券
   if ( $("#couponListUl").length > 0 ) {
-    var time = 0;
+    let time = 0;
     $("#couponListUl a.coupon-a").each(function() {
-      var that = $(this)
-      var coupon_name = that.find('.pro-info').text()
-      var coupon_id = that.find("input[class=id]").val()
-      var coupon_batch = that.find("input[class=batchId]").val()
-      var coupon_price = '面值：' + that.find('.pro-price .big-price').text() + '元 (' + that.find('.pro-price .price-info').text() + ')'
+      let that = $(this)
+      let coupon_name = that.find('.pro-info').text()
+      let coupon_id = that.find("input[class=id]").val()
+      let coupon_batch = that.find("input[class=batchId]").val()
+      let coupon_price = '面值：' + that.find('.pro-price .big-price').text() + '元 (' + that.find('.pro-price .price-info').text() + ')'
       if ($(this).find('.coupon-btn').text() == '立即领取' ) {
         setTimeout( function(){
           $(that).find('.coupon-btn').trigger( "click" )
@@ -541,24 +541,30 @@ function CheckDom() {
 
   // 自动领取京东金融铂金会员京东支付返利
   if ($("#react-root .react-root .react-view").length > 0) {
-      $("#react-root .react-root .react-view img").each(function() {
-        var that = $(this)
-        if (that.attr("src") && that.width() > 40) {
+    let time = 0;
+    $("#react-root .react-root .react-view img").each(function() {
+      let that = $(this)
+      if (that.attr("src") && that.width() > 40) {
+        setTimeout(function () {
           mockClick(that[0])
-          var amount = that.parent().parent().prev().find('span').last().text()
-          var content = "应该是领到了" + amount + '元的返利。'
-          if (amount > 5) {
-            content += "求打赏"
+          let amount = that.parent().parent().prev().find('span').last().text()
+          if (amount && amount > 0.1) {
+            let content = "应该是领到了" + amount + '元的返利。'
+            if (amount > 5) {
+              content += "求打赏"
+            }
+            chrome.runtime.sendMessage({
+              text: "checkin_notice",
+              batch: "jrfx",
+              title: "京价宝自动为您领取铂金会员支付返利",
+              content: content
+            }, function (response) {
+              console.log("Response: ", response);
+            });
           }
-          chrome.runtime.sendMessage({
-            text: "checkin_notice",
-            batch: "jrfx",
-            title: "京价宝自动为您领取铂金会员支付返利",
-            content: content
-          }, function (response) {
-            console.log("Response: ", response);
-          });
-        }
+        }, time)
+        time += 5000;
+      }
     })
   }
 

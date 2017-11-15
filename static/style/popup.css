@@ -29,6 +29,11 @@
 .other_actions{
     padding: 10px;
 }
+
+.other_actions p{
+    padding: 5px 0;
+}
+
 .no_order{
   padding: 5em;
   text-align: center;
@@ -186,6 +191,15 @@
     padding: 7px 0;
 }
 
+.js-close{
+    position: absolute;
+    right: 16px;
+    top: 12px;
+    padding: 4px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
 .settings_box{
     overflow-y: auto;
     overflow-x: hidden;
@@ -218,7 +232,13 @@
 }
 
 #feedbackDialags .weui-dialog{
-    background-color: #f3f3f3;
+    background-color: #f8f8f8;
+    height: 460px;
+}
+
+#feedbackDialags iframe{
+    width: 90%;
+    height: 450px;
 }
 
 #feedbackResult, #feedbackDialags{

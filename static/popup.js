@@ -3,6 +3,9 @@ $( document ).ready(function() {
   var login = localStorage.getItem('jjb_logged-in');
   var paid = localStorage.getItem('jjb_paid');
   var account = localStorage.getItem('jjb_account');
+  var disabled_link = localStorage.getItem('disabled_link');
+
+  
   if (login && login == 'Y') {
     $("#login").hide()
   } else {
@@ -48,7 +51,8 @@ $( document ).ready(function() {
  
   if (orders) {
     var orders_html = template('tpl-orders', {
-      orders: orders
+      orders: orders,
+      disabled_link: disabled_link == 'checked' ? true : false
     });
     $('.orders').html(orders_html)
   }
@@ -105,6 +109,14 @@ $( document ).ready(function() {
     $("#changeLogs").show()
   })
 
+  $("#openFeedback").on("click", function () {
+    $("#feedbackDialags").show()
+  })
+
+  $("#feedbackDialags .js-close").on("click", function () {
+    $("#feedbackDialags").hide()
+  })
+
   $(".reload").on("click", function () {
     var job_elem = $(this).parent().parent()
 
@@ -135,7 +147,6 @@ $( document ).ready(function() {
   })
   var notices = [
     '成功申请到价保、功能建议欢迎打赏附言。',
-    '京价宝并非免费插件，请您打赏任意金额获得使用授权。',
     '理想情况下京价宝每月仅各种签到任务即可带来5元以上的等同现金收益。',
     '京东页面经常更新，唯有你的支持才能让京价宝保持更新。',
     '京价宝所有的功能均在本地完成，不会上传任何信息给任何人。',
@@ -143,7 +154,16 @@ $( document ).ready(function() {
     '京东的登录有效期很短，请在登录时勾选保存密码自动登录以便京价宝自动完成工作。',
     '京价宝全部代码已上传到GitHub，欢迎审查代码。',
   ]
+  var rewards = [
+    '给开发者加个鸡腿',
+    '请开发者喝杯咖啡',
+    '京价宝就是好',
+    '保价成功，感谢开发者',
+    '返利到手，打赏开发者',
+  ]
+
   $("#notice").text(notices[Math.floor(Math.random() * notices.length)])
+  $("#pay").text(rewards[Math.floor(Math.random() * rewards.length)])
 
   $("#pricePro").on("click", function () {
     chrome.runtime.sendMessage({

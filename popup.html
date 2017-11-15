@@ -207,15 +207,28 @@
                     </div>
                   </div>
                   <div class="weui-cell weui-cell_switch">
-                    <div class="weui-cell__bd">自动补全并提交评价</div>
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="此功能会在商品评价页面自动评价并提交，这是全自动评价功能的一个半成品">自动补全并提交评价</span>
+                    </div>
                     <div class="weui-cell__ft">
                       <input class="weui-switch" type="checkbox" name="auto_review" data-persist="garlic" class="garlic-auto-save" data-domain="true">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="在右侧“最近订单”中京价宝提供的商品链接包含了京东联盟的跳转，它不会影响你，却能给开发者提供一些收入，帮助京价宝保持更新。">停用最近订单中的链接</span>
+                    </div>
+                    <div class="weui-cell__ft">
+                      <input class="weui-switch" type="checkbox" name="disabled_link" data-persist="garlic" class="garlic-auto-save" data-domain="true">
                     </div>
                   </div>
                 </div>
                 <div class="other_actions">
                   <p>
                     <a href="#" id="clearAccount" class="weui-btn weui-btn_warn tippy" title="在登录时勾选记住密码可保存新的密码">清除已保存的密码</a>
+                  </p>
+                  <p>
+                    <a href="#" id="openFeedback" class="weui-btn weui-btn_default">建议反馈</a>
                   </p>
                 </div>
               </div>
@@ -252,7 +265,8 @@
               <strong class="weui-dialog__title">最近更新</strong>
             </div>
             <div class="weui-dialog__bd changelogs">
-              <p>1.13.0 增加铂金会员支付返利自动领取；增加更多配置项；调整账号保存方式；</p>
+              <p>1.13.2 增加更多配置；增加建议反馈；</p>
+              <p>1.13.0 增加铂金会员支付返利自动领取；调整账号保存方式；</p>
               <p>1.12.1 改进样式；增加最近更新；</p>
               <p>1.12.0 增加提示音效; 增加随机提示</p> 
               <p>1.11.1 增加京东金融会员签到；增加了查看价格保护列表的链接；</p>
@@ -275,55 +289,8 @@
         <div class="js_dialog" style="opacity: 1;">
           <div class="weui-mask"></div>
           <div class="weui-dialog">
-            <div class="weui-dialog__hd">
-              <strong class="weui-dialog__title">反馈建议</strong>
-            </div>
-            <div class="weui-dialog__bd changelogs">
-              <form id="feedback">
-                <ul class="weui-cells__container">
-                  <li style="display:;">
-                    <div>
-                      <div class="weui-cells__title">
-                        <label for="email">邮箱</label>
-                      </div>
-                      <div class="weui-cells weui-cells_form">
-                        <div class="weui-cell">
-                          <div class="weui-cell__bd">
-                            <input id="email" name="email" type="email" required="required" class="weui-input">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="weui-cells__tips" style="display:none;"></div>
-                    </div>
-                  </li>
-                  <li style="display:;">
-                    <div>
-                      <div class="weui-cells__title">
-                        <label for="content">反馈内容</label>
-                      </div>
-                      <div class="weui-cells weui-cells_form">
-                        <div class="weui-cell">
-                          <div class="weui-cell__bd">
-                            <textarea id="content" name="content" type="text" required="required" class="weui-textarea"></textarea>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-                <div class="weui-btn-area">
-                  <a class="weui-btn weui-btn_primary" id="submit">提交</a>
-                </div>
-              </form>
-              <div id="feedbackResult">
-                <div class="weui-msg">
-                  <div class="weui-msg__icon-area">
-                    <i class="weui-icon-success weui-icon_msg"></i>
-                  </div>
-                </div>
-              </div>
-
-            </div>
+            <span class="js-close">x</span> 
+            <iframe src="https://i.duotai.co/forms/yovwz" frameborder="0"></iframe>
           </div>
         </div>
       </div>
@@ -335,7 +302,7 @@
         <div class="js_dialog" style="opacity: 1;">
             <div class="weui-mask"></div>
             <div class="weui-dialog">
-              <div class="weui-dialog__hd"><strong class="weui-dialog__title">打赏任意金额</strong></div>
+              <div class="weui-dialog__hd"><strong class="weui-dialog__title">支持开发者</strong></div>
               <ul class="segmented-control">
                 <li class="segmented-control__item">
                   <input class="segmented-control__input" id="payMethod-weixin" type="radio" value="weixin" name="payMethod" checked="">
@@ -349,7 +316,7 @@
               <div class="weui-dialog__bd weixin_pay"><img src="static/image/weixin_pay.png" height="248px"></div>
               <div class="weui-dialog__bd alipay_pay"><img src="static/image/alipay_pay.png" height="200px"></div>
               <div class="weui-dialog__bd">
-                <p>谢谢老板！</p>
+                <p>因为你的支持，京价宝才能一直保持更新，适配京东的页面修改，增加更多自动功能。</p>
               </div>
               <div class="weui-dialog__ft">
                   <a class="weui-dialog__btn weui-dialog__btn_primary" data-action="paid">付好了</a>
@@ -368,7 +335,7 @@
             <div class="weui-cell good">
               <div class="weui-cell__bd">
                 <p class="good_title">
-                  {{if good.sku}}
+                  {{if good.sku && !disabled_link}}
                     <a href="https://jjb.zaoshu.so/good/{{good.sku}}" target="_blank">{{good.name}}</a>
                   {{else}}
                     <span>{{good.name}}</span>
@@ -392,7 +359,7 @@
           {{/each}}
         {{/each}}
       {{else}}
-        <div class="no_order"> 暂时还没有订单 </div>
+        <div class="no_order"> 暂时还没有待保价订单 </div>
       {{/if}}
     </script>
     <!-- body 最后 -->
