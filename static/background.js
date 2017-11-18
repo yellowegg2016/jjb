@@ -105,10 +105,18 @@ chrome.runtime.onInstalled.addListener(function (object) {
   } else {
     localStorage.setItem('jjb_installed', 'Y');
     chrome.tabs.create({url: "/start.html"}, function (tab) {
-      console.log("京价宝安装成功！");
+      console.log("京价保安装成功！");
     });
   }
 });
+try {
+  browser.runtime.getBrowserInfo().then(function (browserInfo) {
+    localStorage.setItem('browserName', browserInfo.name);
+  })
+} catch (error) {
+  
+}
+
 
 
 chrome.alarms.onAlarm.addListener(function( alarm ) {

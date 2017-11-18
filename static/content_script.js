@@ -1,4 +1,4 @@
-// 京价宝
+// 京价保
 async function fetchProductPage(sku) {
   var resp = await fetch('https://item.m.jd.com/product/' + sku + '.html')
   var page = await resp.text()
@@ -132,7 +132,7 @@ async function dealOrder(order, orders, setting) {
 }
 
 async function getAllOrders(setting) {
-  console.log('京价宝开始自动检查订单')
+  console.log('京价保开始自动检查订单')
   let orders = []
   let dealorders = []
   $( "#datas li" ).each(function() {
@@ -148,7 +148,7 @@ async function getAllOrders(setting) {
   localStorage.setItem('jjb_last_check', new Date().getTime());
 }
 
-var auto_login_html = "<p class='auto_login'><input type='checkbox' id='jjbAutoLogin'><label for='jjbAL'>记住密码，并为我自动登录（京价宝提供）</label></p>";
+var auto_login_html = "<p class='auto_login'><input type='checkbox' id='jjbAutoLogin'><label for='jjbAL'>记住密码，并为我自动登录（京价保提供）</label></p>";
 
 
 function mockClick(element) {
@@ -180,7 +180,7 @@ function CheckBaitiaoCouponDom() {
         $(that).find('.js_getCoupon').trigger( "click" )
         chrome.runtime.sendMessage({
           text: "coupon",
-          title: "京价宝自动领到一张白条优惠券",
+          title: "京价保自动领到一张白条优惠券",
           content: JSON.stringify({
             batch: 'baitiao',
             price: coupon_price,
@@ -382,7 +382,7 @@ function CheckDom() {
     chrome.runtime.sendMessage({
       text: "checkin_notice",
       batch: "bean",
-      title: "京价宝自动为您签到领京豆",
+      title: "京价保自动为您签到领京豆",
       content: "具体领到多少就不清楚了，大概是3个"
     }, function(response) {
       console.log("Response: ", response);
@@ -396,7 +396,7 @@ function CheckDom() {
     $("#appSign-btn").trigger( "click" )
     chrome.runtime.sendMessage({
       text: "checkin_notice",
-      title: "京价宝自动为您签到抢钢镚",
+      title: "京价保自动为您签到抢钢镚",
       content: "应该是领到了0.1个钢镚"
     }, function(response) {
       console.log("Response: ", response);
@@ -411,7 +411,7 @@ function CheckDom() {
     chrome.runtime.sendMessage({
       text: "checkin_notice",
       batch: "bean",
-      title: "京价宝自动为您签到京东支付",
+      title: "京价保自动为您签到京东支付",
       content: "应该是领到了几个京豆"
     }, function(response) {
       console.log("Response: ", response);
@@ -424,7 +424,7 @@ function CheckDom() {
     $("#index-qian-btn").trigger("click")
     chrome.runtime.sendMessage({
       text: "checkin_notice",
-      title: "京价宝自动为您签到京东金融",
+      title: "京价保自动为您签到京东金融",
       content: "应该是领到了很少的钢镚"
     }, function (response) {
       console.log("Response: ", response);
@@ -444,7 +444,7 @@ function CheckDom() {
           $(that).find('.get-btn').trigger( "click" )
           chrome.runtime.sendMessage({
             text: "coupon",
-            title: "京价宝自动领到一张 PLUS 优惠券",
+            title: "京价保自动领到一张 PLUS 优惠券",
             content: JSON.stringify({
               id: '',
               batch: '',
@@ -523,7 +523,7 @@ function CheckDom() {
           $(that).find('.coupon-btn').trigger( "click" )
           chrome.runtime.sendMessage({
             text: "coupon",
-            title: "京价宝自动领到一张新的优惠券",
+            title: "京价保自动领到一张新的优惠券",
             content: JSON.stringify({
               id: coupon_id,
               batch: coupon_batch,
@@ -556,7 +556,7 @@ function CheckDom() {
             chrome.runtime.sendMessage({
               text: "checkin_notice",
               batch: "jrfx",
-              title: "京价宝自动为您领取铂金会员支付返利",
+              title: "京价保自动为您领取铂金会员支付返利",
               content: content
             }, function (response) {
               console.log("Response: ", response);
@@ -596,7 +596,7 @@ function CheckDom() {
 }
 
 $( document ).ready(function() {
-  console.log('京价宝注入页面成功');
+  console.log('京价保注入页面成功');
   setTimeout( function(){
     CheckDom()
   }, 3000)
