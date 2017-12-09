@@ -1,16 +1,19 @@
 # 京价保
 
-京价保是一个帮助你自动申请京东价格保护，顺便帮你签到领券的 Chrome 拓展。
+京价保是一个帮助你自动申请京东价格保护，顺便帮你签到领券，自动领取返利的 Chrome 拓展。
 
-本拓展不会将任何信息被上传到任何服务器，公开代码的目的就是为了证明这一点。
-
-所有的操作都会在本地完成，因此如果你不打开 Chrome 浏览器，本插件也将不会运行。
+强烈推荐使用 Chrome 商店安装（这样才能获得自动更新）：
 
 <a target='_blank' rel='nofollow' href='https://chrome.google.com/webstore/detail/gfgkebiommjpiaomalcbfefimhhanlfd'>
   <img alt='Chrome
   web store' width='496' height='150' src='https://oi4m2ufmx.qnssl.com/jjb/cws_badge_496x150.png' />
 </a>
 
+同时提供 Firefox 版本：
+
+<a href="https://addons.mozilla.org/zh-CN/firefox/addon/jjb/" target="_black">
+  <img alt="安装 Firefox 版" class="firefox" src="https://d33wubrfki0l68.cloudfront.net/4ce5ce101cdaa4030248fab2934960ad1cc6960e/3f95c/firefox-quantum.png" width="32px">
+</a>
 
 
 ## 主要功能
@@ -55,8 +58,12 @@
 1. 将本项目的部分或全部代码和资源进行任何形式的再发行（尤其是上传到 Chrome 商店）
 2. 利用本项目的部分或全部代码和资源进行任何商业行为
 
-## sponsor
+## 赞助商
 
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/pLGTRpZCggU3MF7auk9AChc4/sunoj/jjb'>
-  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/pLGTRpZCggU3MF7auk9AChc4/sunoj/jjb.svg' />
+<h3>
+  <a href="https://duohui.co/?utm_source=jjb&utm_medium=github&utm_campaign=jjb-readme" target="_blank">多会 - 专业的活动管理系统</a>
+</h3>
+
+<a target='_blank' href='https://duohui.co/?utm_source=jjb&utm_medium=github&utm_campaign=jjb-readme'>
+  <img alt='多会 - 一键生成活动小程序' width='561' height='211' src='https://oi4m2ufmx.qnssl.com/jjb/duohui_minapp.png' />
 </a>

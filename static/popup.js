@@ -53,12 +53,27 @@ $( document ).ready(function() {
     orders = []
   }
  
-  if (orders) {
-    var orders_html = template('tpl-orders', {
-      orders: orders,
-      disabled_link: disabled_link == 'checked' ? true : false
-    });
-    $('.orders').html(orders_html)
+  if (orders && orders.length > 0) {
+    var ordersFrame = document.getElementById('ordersFrame');
+    var message = {
+      command: 'render',
+      context: {
+        name: 'orders',
+        orders: orders,
+        disabled_link: disabled_link == 'checked' ? true : false
+      }
+    };
+    console.log('message', message)
+    function receiveMessage(event) {
+      console.log('receiveMessage', event.data)
+      if (event.data.html) {
+        $('.orders').html(event.data.html)
+      }
+    }
+    setTimeout(() => {
+      ordersFrame.contentWindow.postMessage(message, '*');
+    }, 200);
+    window.addEventListener('message', receiveMessage, false)
   }
 
   $(".weui-cell_select").each(function () {

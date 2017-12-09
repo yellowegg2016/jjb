@@ -8,18 +8,19 @@ var watch = require('gulp-watch');
 gulp.task('watch', function () {
   // watch many files
   watch([
-    'background.html', 'manifest.json', 'popup.html', 'start.html',
-    'static/*.js', 'static/*.css'
+    'manifest.json', '*.html',
+    'static/*.js', 'static/style/*.css'
   ], function () {
     gulp.start('default');
   });
 });
 
 gulp.task('pack-js', function () {
-  gulp.src(['static/jquery.js', 'static/garlic.js', 'static/tippy.min.js', 'static/moment.min.js', 'static/template-web.js', 'static/popup.js'])
+  gulp.src(['static/jquery.js', 'static/garlic.js', 'static/tippy.min.js', 'static/moment.min.js', 'static/popup.js'])
     .pipe(concat('bundle.js'))
-    .pipe(minify())
-    .pipe(optimizejs())
+    .pipe(optimizejs({
+      sourceMap: true
+    }))
     .pipe(gulp.dest('build/static/js'));
   console.log("pack-js task done @", new Date())
     
@@ -37,13 +38,14 @@ gulp.task('move-static', [], function () {
     'static/audio/*.*', 'static/image/*.*', 'static/style/*.css',
     'static/background.js', 'static/content_script.js', 'static/jquery.js',
     'static/lodash.js', 'static/start.js', 'static/zepto.min.js', 'static/moment.min.js',
+    'static/template-web.js'
   ], { base: './' })
     .pipe(gulp.dest('build'));
 });
 
 gulp.task('move-file', [], function () {
   gulp.src([
-    'background.html', 'manifest.json', 'popup.html', 'start.html'
+    'background.html', 'manifest.json', 'popup.html', 'start.html', '*.html'
   ])
     .pipe(gulp.dest('build'));
 });
