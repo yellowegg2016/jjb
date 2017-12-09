@@ -2,13 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <script src="static/jquery.js"></script>
-    <script src="static/garlic.js"></script>
-    <script src="static/tippy.min.js"></script>
-    <!-- head 中 -->
-    <link rel="stylesheet" href="static/style/weui.min.css">
-    <link rel="stylesheet" href="static/style/popup.css">
-    <link rel="stylesheet" href="static/style/tippy.css">
+    <link rel="stylesheet" href="static/style/popupstyle.css">
   </head>
   <body>
     <div class="popup">
@@ -222,6 +216,14 @@
                       <input class="weui-switch" type="checkbox" name="disabled_link" data-persist="garlic" class="garlic-auto-save" data-domain="true">
                     </div>
                   </div>
+                  <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="该功能会自动跳转http的访问至https，这能更安全的访问京东以及防止运营商劫持（而且这样你就不会把劫持跳转的锅甩到京价保身上了）。">总是使用https访问京东</span>
+                    </div>
+                    <div class="weui-cell__ft">
+                      <input class="weui-switch" type="checkbox" name="force_https" data-persist="garlic" class="garlic-auto-save" data-domain="true">
+                    </div>
+                  </div>
                 </div>
                 <div class="other_actions">
                   <p>
@@ -265,6 +267,7 @@
               <strong class="weui-dialog__title">最近更新</strong>
             </div>
             <div class="weui-dialog__bd changelogs">
+              <p>1.13.4 优化加载速度；大幅降低展示赞赏提示的频率；</p>
               <p>1.13.2 增加更多配置；增加建议反馈；</p>
               <p>1.13.0 增加铂金会员支付返利自动领取；调整账号保存方式；</p>
               <p>1.12.1 改进样式；增加最近更新；</p>
@@ -289,8 +292,12 @@
         <div class="js_dialog" style="opacity: 1;">
           <div class="weui-mask"></div>
           <div class="weui-dialog">
-            <span class="js-close">x</span> 
-            <iframe src="https://i.duotai.co/forms/yovwz" frameborder="0"></iframe>
+            <span class="js-close">x</span>
+            <iframe id="feedbackIframe" src="" frameborder="0"></iframe>
+            <div class="weui-toast iframe-loading">
+              <i class="weui-loading weui-icon_toast"></i>
+              <p class="weui-toast__content">数据加载中</p>
+            </div>
           </div>
         </div>
       </div>
@@ -363,9 +370,7 @@
       {{/if}}
     </script>
     <!-- body 最后 -->
-    <script src="static/moment.min.js"></script>
-    <script src="static/template-web.js"></script>
-    <script src="static/popup.js"></script>
+    <script src="static/js/bundle-min.js"></script>
   </body>
 </html>
 

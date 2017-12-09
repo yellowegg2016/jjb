@@ -1,0 +1,18 @@
+{
+  "name": "jjb",
+  "version": "1.13.4",
+  "author": "Ming",
+  "private": true,
+  "scripts": {
+    "build": "node_modules/.bin/gulp",
+    "dev": "node_modules/.bin/gulp watch"
+  },
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.9.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-minify": "^2.1.0",
+    "gulp-optimize-js": "^1.1.0",
+    "gulp-watch": "^4.3.11"
+  }
+}

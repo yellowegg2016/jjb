@@ -109,20 +109,20 @@ chrome.runtime.onInstalled.addListener(function (object) {
     });
   }
 });
+
+// 判断浏览器
 try {
   browser.runtime.getBrowserInfo().then(function (browserInfo) {
     localStorage.setItem('browserName', browserInfo.name);
   })
-} catch (error) {
-  
-}
-
+} catch (error) {}
 
 
 chrome.alarms.onAlarm.addListener(function( alarm ) {
   switch(true){
     // 定时检查任务
     case alarm.name.startsWith('delayIn'):
+      clearDiscardableTabs()
       findJobs()
       run()
       break;
@@ -211,6 +211,7 @@ function run(jobId, force) {
       $("#iframe").attr('src', job.src)
     } else {
       chrome.tabs.create({
+        autoDiscardable: true,
         index: 1,
         url: job.src,
         active: false,
@@ -239,6 +240,17 @@ $( document ).ready(function() {
 
   // 载入后马上运行一次任务查找
   findJobs()
+
+  // 总是安全的访问京东
+  var force_https = localStorage.getItem('force_https')
+  if (force_https && force_https == 'checked') {
+    chrome.tabs.onCreated.addListener(function (tab){
+      forceHttps(tab)
+    })
+    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+      forceHttps(tab)
+    })
+  }
 })
 
 // 点击通知
@@ -249,11 +261,13 @@ chrome.notifications.onClicked.addListener(function (notificationId){
       switch(batch){
         case 'baitiao':
           chrome.tabs.create({
+            autoDiscardable: true,
             url: "https://vip.jr.jd.com/coupon/myCoupons?default=IOU"
           })
           break;
         case 'bean':
           chrome.tabs.create({
+            autoDiscardable: true,
             url: "http://bean.jd.com/myJingBean/list"
           })
           break;
@@ -265,6 +279,7 @@ chrome.notifications.onClicked.addListener(function (notificationId){
           break;
         default:
           chrome.tabs.create({
+            autoDiscardable: true,
             url: "https://search.jd.com/Search?coupon_batch="+batch
           })
       }
@@ -289,6 +304,33 @@ function openFXDetailPage() {
     type: "popup"
   });
 }
+
+// force ssl
+function forceHttps(tab) {
+  if (tab && _.startsWith(tab.url, 'http://') && tab.url.indexOf('jd.com') !== -1) {
+    chrome.tabs.update(tab.id, {
+      url: tab.url.replace(/^http:\/\//i, 'https://')
+    }, function () {
+      console.log('force ssl jd.com')
+    })
+  }
+}
+
+// 清除不需要的tab
+function clearDiscardableTabs() {
+  chrome.tabs.query({
+    autoDiscardable: 'true',
+    pinned: 'true'
+  }, function (tabs) {
+    var tabIds = $.map(tabs, function (tab) {
+      if (tab && tab.url.indexOf('jd.com') !== -1) {
+        return tab.id
+      }
+    })
+    chrome.tabs.remove(tabIds)
+  })
+}
+
 
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
   switch(msg.text){
@@ -381,6 +423,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     case 'create_tab':
       var content = JSON.parse(msg.content)
       chrome.tabs.create({
+        autoDiscardable: true,
         index: content.index,
         url: content.url,
         active: content.active == 'true',

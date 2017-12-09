@@ -5,18 +5,20 @@ $( document ).ready(function() {
   var account = localStorage.getItem('jjb_account');
   var browser = localStorage.getItem('browserName');
   var disabled_link = localStorage.getItem('disabled_link');
-
   
   if (login && login == 'Y') {
     $("#login").hide()
+    
+    if (paid) {
+      $("#dialogs").hide()
+    } else {
+      let time = Date.now().toString()
+      if (time[time.length - 1] < 3) {
+        $("#dialogs").show()
+      }
+    }
   } else {
     $("#login").show()
-  }
-
-  if (paid) {
-    $("#dialogs").hide()
-  } else {
-    $("#dialogs").show()
   }
 
   if (!account) {
@@ -112,6 +114,13 @@ $( document ).ready(function() {
   })
 
   $("#openFeedback").on("click", function () {
+    // 加载反馈
+    if ($("#feedbackIframe").attr('src') == '') {
+      $("#feedbackIframe").attr('src', "https://i.duotai.net/forms/yovwz")
+      setTimeout(function () {
+        $('.iframe-loading').hide()
+      }, 800)
+    }
     $("#feedbackDialags").show()
   })
 
