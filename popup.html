@@ -182,7 +182,14 @@
                       <input class="weui-switch" type="checkbox" name="play_audio" data-persist="garlic" class="garlic-auto-save" data-domain="true">
                     </div>
                   </div>
-              
+                  <div class="weui-cell weui-cell_switch">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="同时需勾选播放提示音效，才会生效">真人语音提示</span>
+                    </div>
+                    <div class="weui-cell__ft">
+                      <input class="weui-switch" type="checkbox" name="play_voice_audio" data-persist="garlic" class="garlic-auto-save" data-domain="true">
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="other_settings settings_box" style="display: none">
@@ -251,7 +258,7 @@
         </div>
         <div class="weui-cells orders">
           <iframe id="ordersFrame" src="/orders.html" frameborder="0"></iframe>
-          <div class="no_order"> 暂时还没有订单 </div>
+          <div class="no_order"> 暂时还没有监控到订单 </div>
         </div>
         <div class="bottom">
           <a id="pricePro" href="javascript:;">查看价格保护页面</a>
@@ -268,6 +275,7 @@
               <strong class="weui-dialog__title">最近更新</strong>
             </div>
             <div class="weui-dialog__bd changelogs">
+              <p>1.13.7 改善自动登录策略；修复需在标签页中完成的任务的问题；</p>
               <p>1.13.4 优化加载速度；大幅降低展示赞赏提示的频率；</p>
               <p>1.13.2 增加更多配置；增加建议反馈；</p>
               <p>1.13.0 增加铂金会员支付返利自动领取；调整账号保存方式；</p>

@@ -148,7 +148,7 @@ async function getAllOrders(setting) {
   localStorage.setItem('jjb_last_check', new Date().getTime());
 }
 
-var auto_login_html = "<p class='auto_login'><input type='checkbox' id='jjbAutoLogin'><label for='jjbAL'>记住密码，并为我自动登录（京价保提供）</label></p>";
+var auto_login_html = "<p class='auto_login'><span class='jjb-login'>让京价保记住密码并自动登录</span></p>";
 
 
 function mockClick(element) {
@@ -201,6 +201,7 @@ function saveAccount(account) {
     text: "saveAccount",
     content: JSON.stringify(account)
   }, function (response) {
+    console.log('saveAccount response', response)
   });
 }
 
@@ -220,6 +221,8 @@ function getAccount(type) {
           console.log("Response: ", response);
         });
       }
+    } else {
+      console.log('getAccount', response)
     }
   });
 }
@@ -340,36 +343,36 @@ function CheckDom() {
   if ( $(".loginPage").length > 0 ) {
     getAccount('m')
     $(auto_login_html).insertAfter( ".loginPage .notice" )
-    $("#loginBtn").on("click", function () {
-      if ($("#jjbAutoLogin").is(":checked")) {
-        var username = $("#username").val()
-        var password = $("#password").val()
-        // 保存账号和密码
-        if (username && password) {
-          saveAccount({
-            username: username,
-            password: password
-          })
-        }
+    $('.loginPage').on('click', '.jjb-login', function (e) {
+      window.event ? window.event.returnValue = false : e.preventDefault();
+      var username = $("#username").val()
+      var password = $("#password").val()
+      // 保存账号和密码
+      if (username && password) {
+        saveAccount({
+          username: username,
+          password: password
+        })
       }
+      mockClick($("#loginBtn")[0])
     })
   };
   // PC版登录页
   if ($(".login-tab-r ").length > 0) {
     getAccount('pc')
     $(auto_login_html).insertAfter("#formlogin")
-    $(".login-btn a").on("click", function () {
-      if ($("#jjbAutoLogin").is(":checked")) {
-        var username = $("#loginname").val()
-        var password = $("#nloginpwd").val()
-        // 保存账号和密码
-        if (username && password) {
-          saveAccount({
-            username: username,
-            password: password
-          })
-        }
+    $('.login-box').on('click', '.jjb-login', function (e) {
+      window.event ? window.event.returnValue = false : e.preventDefault();
+      var username = $("#loginname").val()
+      var password = $("#nloginpwd").val()
+      // 保存账号和密码
+      if (username && password) {
+        saveAccount({
+          username: username,
+          password: password
+        })
       }
+      mockClick($(".login-btn a")[0])
     })
   };
 
@@ -599,5 +602,5 @@ $( document ).ready(function() {
   console.log('京价保注入页面成功');
   setTimeout( function(){
     CheckDom()
-  }, 3000)
+  }, 2000)
 });

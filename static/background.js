@@ -122,7 +122,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
   switch(true){
     // 定时检查任务
     case alarm.name.startsWith('delayIn'):
-      clearDiscardableTabs()
+      clearPinnedTabs()
       findJobs()
       run()
       break;
@@ -211,7 +211,6 @@ function run(jobId, force) {
       $("#iframe").attr('src', job.src)
     } else {
       chrome.tabs.create({
-        autoDiscardable: true,
         index: 1,
         url: job.src,
         active: false,
@@ -261,13 +260,13 @@ chrome.notifications.onClicked.addListener(function (notificationId){
       switch(batch){
         case 'baitiao':
           chrome.tabs.create({
-            autoDiscardable: true,
+  
             url: "https://vip.jr.jd.com/coupon/myCoupons?default=IOU"
           })
           break;
         case 'bean':
           chrome.tabs.create({
-            autoDiscardable: true,
+  
             url: "http://bean.jd.com/myJingBean/list"
           })
           break;
@@ -279,7 +278,7 @@ chrome.notifications.onClicked.addListener(function (notificationId){
           break;
         default:
           chrome.tabs.create({
-            autoDiscardable: true,
+  
             url: "https://search.jd.com/Search?coupon_batch="+batch
           })
       }
@@ -317,9 +316,8 @@ function forceHttps(tab) {
 }
 
 // 清除不需要的tab
-function clearDiscardableTabs() {
+function clearPinnedTabs() {
   chrome.tabs.query({
-    autoDiscardable: 'true',
     pinned: 'true'
   }, function (tabs) {
     var tabIds = $.map(tabs, function (tab) {
@@ -423,7 +421,6 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     case 'create_tab':
       var content = JSON.parse(msg.content)
       chrome.tabs.create({
-        autoDiscardable: true,
         index: content.index,
         url: content.url,
         active: content.active == 'true',

@@ -53,3 +53,21 @@
     width: 100%;
     height: 200px;
 }
+
+.jjb-login{
+    cursor: pointer;
+    background: #4CAF50;
+    border: 1px solid #4CAF50;
+    display: block;
+    width: 96%;
+    height: 31px;
+    line-height: 31px;
+    color: #fff;
+    padding: 4px 2%;
+    font-size: 16px;
+    text-align: center;
+}
+
+.auto_login{
+    margin-bottom: 5px;
+}
