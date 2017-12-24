@@ -530,6 +530,10 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         time: new Date()
       })
       updateUnreadCount(1)
+      // 如果消息数大于100了，就把最老的一条消息去掉
+      if (messages.length > 100) {
+        messages.shift()
+      }
       localStorage.setItem('jjb_messages', JSON.stringify(messages));
       break;
   }

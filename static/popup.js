@@ -126,7 +126,6 @@ $( document ).ready(function() {
       message.time = moment(message.time).locale('zh-cn').calendar()
       return message
     })
-    console.log(messages)
   } else {
     messages = []
   }
