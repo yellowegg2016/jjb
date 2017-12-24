@@ -408,7 +408,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       var play_audio = localStorage.getItem('play_audio')
       if (msg.batch == 'jiabao') {
         var hide_good = localStorage.getItem('hide_good')
-        if (play_audio && play_audio == 'checked') {
+        if (play_audio && play_audio == 'checked' || msg.test) {
           var myAudio = new Audio();
           myAudio.src = "static/audio/price_protection.ogg";
           myAudio.play();
@@ -418,7 +418,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         }
       }
       if (msg.batch == 'rebate') {
-        if (play_audio && play_audio == 'checked') {
+        if (play_audio && play_audio == 'checked' || msg.test) {
           var myAudio = new Audio();
           myAudio.src = "static/audio/rebate.ogg";
           myAudio.play();
@@ -440,11 +440,11 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       break;
     case 'checkin_notice':
       var mute_checkin = localStorage.getItem('mute_checkin')
-      if (mute_checkin && mute_checkin == 'checked') {
+      if (mute_checkin && mute_checkin == 'checked' && !msg.test) {
         console.log('checkin', msg)
       } else {
         var play_audio = localStorage.getItem('play_audio')
-        if (play_audio && play_audio == 'checked') {
+        if (play_audio && play_audio == 'checked' || msg.test) {
           var myAudio = new Audio();
           myAudio.src = "static/audio/beans.ogg";
           if (msg.batch == 'coin') {

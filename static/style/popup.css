@@ -67,10 +67,12 @@ select {
     padding: 5px 0;
 }
 
-.no_order{
-  padding: 5em;
-  text-align: center;
-  color: #ccc;
+.no_order, .no_message{
+    background: url(../image/empty.svg) no-repeat center 10px;
+    padding: 5em 0em;
+    text-align: center;
+    color: #ccc;
+    margin-top: 10em;
 }
 
 .tips .payReward {
@@ -476,4 +478,8 @@ button.Button.messages-tab.Button--plain:focus {
 
 #listenAudio .weui-cells{
     margin-bottom: .8em;
+}
+
+#listenAudio .weui-cell_access{
+    cursor: pointer;
 }
