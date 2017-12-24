@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="static/template-web.js"></script>
+  </head>
+  <body>
+    <script id="tpl-orders" type="text/html">
+      {{if orders && orders.length > 0}}
+        {{each orders order index}}
+          <div class="weui-cells__title time"> 下单时间： {{order.time}}</div>
+          {{each order.goods good i}}
+            <div class="weui-cell good">
+              <div class="weui-cell__bd">
+                <p class="good_title">
+                  {{if good.sku && !disabled_link}}
+                    <a href="https://jjb.zaoshu.so/good/{{good.sku}}" target="_blank">{{good.name}}</a>
+                  {{else}}
+                    <span>{{good.name}}</span>
+                  {{/if}}
+                </p>
+              </div>
+              <div class="weui-cell__ft">
+                <span class="order_price">￥{{good.order_price}}</span>
+                {{if good.order_price > good.new_price}}
+                  <span class="new_price down">￥{{good.new_price}}</span>
+                {{else if good.order_price < good.new_price}}
+                  <span class="new_price up">￥{{good.new_price}}</span>
+                {{else}}
+                  <span class="new_price">￥{{good.new_price}}</span>
+                {{/if}}
+              </div>
+            </div>
+            {{each good.success_log log}}
+              <p class="success_log">{{log}}</p>
+            {{/each}}
+          {{/each}}
+        {{/each}}
+      {{else}}
+        <div class="no_order"> 暂时还没有待保价订单(只显示选定范围的订单) </div>
+      {{/if}}
+    </script>
+    <script id="tpl-messages" type="text/html">
+      <div class="messages-top">
+        <div class="messages-header">
+          <button class="Button messages-tab Button--plain" data-type="checkin_notice" type="button">
+            <svg t="1514014683955" class="messages-tabIcon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1650" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16"><defs><style type="text/css"></style></defs><path d="M512 39.384615c-206.769231 0-374.153846 167.384615-374.153846 376.123077 0 259.938462 267.815385 498.215385 350.523077 561.230769 13.784615 11.815385 33.476923 11.815385 49.230769 0 82.707692-64.984615 348.553846-301.292308 348.553846-561.230769 0-208.738462-167.384615-376.123077-374.153846-376.123077zm0 531.692308c-86.646154 0-157.538462-70.892308-157.538462-157.538462s70.892308-157.538462 157.538462-157.538462 157.538462 70.892308 157.538462 157.538462-70.892308 157.538462-157.538462 157.538462z" p-id="1651"></path></svg>
+          </button>
+          <button class="Button messages-tab Button--plain" data-type="notice" type="button">
+            <svg class="messages-tabIcon" width="16px" height="15px" viewBox="0 0 1114 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M252.215652 0L0 312.542609 552.069565 1024l562.086957-711.457391L861.94087 0H252.215652z" /></svg>
+          </button>
+          <button class="Button messages-tab Button--plain" data-type="coupon" type="button">
+            <svg class="messages-tabIcon" width="18px" height="18px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M895.937322 402.045749 895.937322 301.254182c0-44.199665-33.95023-81.634252-78.149894-81.634252L434.43339 219.61993c0 0 0.01228 0.962931 0.01228 1.044796 0 26.520003-21.49864 48.419779-48.018643 48.419779-26.520003 0-48.018643-22.100344-48.018643-48.619324 0-0.081864 0.011256-0.844228 0.01228-0.844228L209.555713 219.620953c-44.199665 0-82.121346 37.434587-82.121346 81.634252l0 101.093443c39.908942 22.180162 63.762209 63.444984 63.762209 110.724801s-23.853267 88.544639-63.762209 110.724801l0 101.619422c0 44.199665 37.921681 78.511121 82.121346 78.511121L338.421686 803.928792c0.132006-23.536043 21.568225-47.77612 48.006364-47.77612 26.438139 0 47.874357 24.240077 48.006364 47.77612l383.354038 0c44.199665 0 78.149894-34.311457 78.149894-78.511121l0-101.316523c-35.815717-22.10546-64.287165-63.530942-64.287165-111.026676C831.650157 465.576691 860.121606 424.151209 895.937322 402.045749zM386.427026 658.966213c-26.520003 0-48.018643-21.49864-48.018643-48.018643 0-26.520003 21.49864-48.018643 48.018643-48.018643 26.520003 0 48.018643 21.49864 48.018643 48.018643C434.44567 637.467573 412.94703 658.966213 386.427026 658.966213zM386.427026 464.224904c-26.520003 0-48.018643-21.49864-48.018643-48.018643 0-26.520003 21.49864-48.018643 48.018643-48.018643 26.520003 0 48.018643 21.49864 48.018643 48.018643C434.44567 442.726264 412.94703 464.224904 386.427026 464.224904z" /></svg>
+          </button>
+        </div>
+      </div>
+      <div class="message-items">
+        {{if messages && messages.length > 0}}
+          {{each messages message index}}
+            <div class="weui-panel__bd message-item type-{{message.type}}">
+              <div class="weui-media-box weui-media-box_text">
+                <h4 class="weui-media-box__title message">
+                  <i class="{{message.type}} {{message.batch}}"></i>
+                  {{message.title}}
+                </h4>
+                {{if message.coupon}}
+                  <div class="coupon-box">
+                    <p>
+                      <span class="price"> {{message.coupon.price}} </span>
+                    </p>
+                    {{if message.coupon.batch == 'baitiao'}}
+                      <a href="https://vip.jr.jd.com/coupon/myCoupons?default=IOU" target="_blank">{{message.coupon.name}}</a>
+                    {{else}}
+                      <a href="https://search.jd.com/Search?coupon_batch={{message.coupon.batch}}" target="_blank">{{message.coupon.name}}</a>
+                    {{/if}}
+                  </div>
+                {{else}}
+                  <p class="weui-media-box__desc">{{message.content}}</p>
+                {{/if}}
+                <ul class="weui-media-box__info">
+                    <li class="weui-media-box__info__meta">时间: {{message.time}}</li>
+                </ul>
+              </div>
+            </div>
+          {{/each}}
+        {{else}}
+          <div class="no_message"> 暂时还没有新的消息 </div>
+        {{/if}}
+      </div>
+    </script>
+    <script>
+      window.addEventListener('message', function (event) {
+        var command = event.data.command;
+        var name = event.data.context.name || 'orders';
+        switch (command) {
+          case 'render':
+            var html = template('tpl-' + name, event.data.context)
+            event.source.postMessage({
+              name: name,
+              html: html
+            }, event.origin);
+            break;
+        }
+      });
+    </script>
+  </body>
+</html>
+
+
+

@@ -1,20 +1,35 @@
+(function ($) {
+  $.each(['show', 'hide'], function (i, ev) {
+    var el = $.fn[ev];
+    $.fn[ev] = function () {
+      this.trigger(ev);
+      return el.apply(this, arguments);
+    };
+  });
+})(jQuery);
 $( document ).ready(function() {
   var orders = JSON.parse(localStorage.getItem('jjb_orders'))
+  var messages = JSON.parse(localStorage.getItem('jjb_messages'))
   var login = localStorage.getItem('jjb_logged-in');
   var paid = localStorage.getItem('jjb_paid');
   var account = localStorage.getItem('jjb_account');
   var browser = localStorage.getItem('browserName');
   var disabled_link = localStorage.getItem('disabled_link');
+  var unreadCount = localStorage.getItem('unreadCount') || 0
+
+  if (unreadCount > 0) {
+    $("#unreadCount").text(unreadCount).fadeIn()
+  }
   
   if (login && login == 'Y') {
-    $("#login").hide()
+    $("#loginNotice").hide()
     
     if (paid) {
       $("#dialogs").hide()
     } else {
       let time = Date.now().toString()
       if (time[time.length - 1] < 3) {
-        $("#dialogs").show()
+        showReward()
       }
     }
   } else {
@@ -24,6 +39,40 @@ $( document ).ready(function() {
   if (!account) {
     $("#clearAccount").addClass('weui-btn_disabled')
   }
+  
+
+  function switchWechat(target) {
+    console.log('switchWechat', target)
+    let to = target || ($("#dialogs .weixin_pay .ming").is(':visible') ? 'samedi' : 'ming')
+    if (to == 'samedi') {
+      $("#dialogs .weixin_pay .ming").hide()
+      $("#dialogs .weixin_pay .samedi").show()
+    } else {
+      $("#dialogs .weixin_pay .ming").show()
+      $("#dialogs .weixin_pay .samedi").hide()
+    }
+  }
+
+  function switchAlipay(target) {
+    let to = target || ($("#dialogs .alipay_pay .alipay").is(':visible') ? 'redpack' : 'alipay')
+    console.log('switchAlipay', target, to)
+    if (to == 'redpack') {
+      console.log('show redpack')
+      $("#dialogs .alipay_pay .alipay").hide()
+      $("#dialogs .alipay_pay .redpack").show()
+    } else {
+      console.log('show alipay')
+      $("#dialogs .alipay_pay .redpack").hide()
+      $("#dialogs .alipay_pay .alipay").show()
+    }
+  }
+
+  function showReward(){
+    $("#dialogs").show()
+    switchWechat()
+    switchAlipay()
+  }
+
 
   if (!browser) {
     // tippy
@@ -37,11 +86,27 @@ $( document ).ready(function() {
   }
 
 
-  $('.weui-navbar__item').on('click', function () {
+  $('.settings .weui-navbar__item').on('click', function () {
     $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
     var type = $(this).data('type')
     $('.settings_box').hide()
-    $('.' + type).show()
+    $('.settings_box.' + type).show()
+  });
+
+
+  $('.contents .weui-navbar__item').on('click', function () {
+    $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+    var type = $(this).data('type')
+    if (type == 'messages') {
+      $("#unreadCount").fadeOut()
+      chrome.runtime.sendMessage({
+        text: "clearUnread"
+      }, function (response) {
+        console.log("Response: ", response);
+      });
+    }
+    $('.contents-box').hide()
+    $('.contents-box.' + type).show()
   });
 
   if (orders) {
@@ -52,29 +117,73 @@ $( document ).ready(function() {
   } else {
     orders = []
   }
+
+  if (messages) {
+    messages = messages.reverse().map(function (message) {
+      if (message.type == 'coupon') {
+        message.coupon = JSON.parse(message.content)
+      }
+      message.time = moment(message.time).locale('zh-cn').calendar()
+      return message
+    })
+    console.log(messages)
+  } else {
+    messages = []
+  }
+
+  var bindAction = function () {
+    $('.messages-header .Button').on('click', function () {
+      let type = $(this).data('type')
+      $('.messages-header .Button').removeClass('selectedTab')
+      $(this).addClass('selectedTab')
+      $('.message-items .message-item').hide()
+      $('.message-items').find('.type-' + type).show()
+    });
+  }
+
+  var renderFrame = document.getElementById('renderFrame');
  
   if (orders && orders.length > 0) {
-    var ordersFrame = document.getElementById('ordersFrame');
-    var message = {
-      command: 'render',
-      context: {
-        name: 'orders',
-        orders: orders,
-        disabled_link: disabled_link == 'checked' ? true : false
-      }
-    };
-    console.log('message', message)
-    function receiveMessage(event) {
-      console.log('receiveMessage', event.data)
-      if (event.data.html) {
-        $('.orders').html(event.data.html)
+    setTimeout(() => {
+      renderFrame.contentWindow.postMessage({
+        command: 'render',
+        context: {
+          name: 'orders',
+          orders: orders,
+          disabled_link: disabled_link == 'checked' ? true : false
+        }
+      }, '*');
+    }, 200);
+  }
+
+  if (messages && messages.length > 0) {
+    setTimeout(() => {
+      renderFrame.contentWindow.postMessage({
+        command: 'render',
+        context: {
+          name: 'messages',
+          messages: messages
+        }
+      }, '*');
+    }, 700);
+  }
+
+  function receiveMessage(event) {
+    if (event.data.html) {
+      switch (event.data.name) {
+        case 'orders':
+          $('#orders').html(event.data.html)
+          break;
+        case 'messages':
+          $('#messages').html(event.data.html)
+          bindAction()
+          break;
+        default:
+          break;
       }
     }
-    setTimeout(() => {
-      ordersFrame.contentWindow.postMessage(message, '*');
-    }, 200);
-    window.addEventListener('message', receiveMessage, false)
   }
+  window.addEventListener('message', receiveMessage, false)
 
   $(".weui-cell_select").each(function () {
     var job_elem = $(this)
@@ -105,6 +214,8 @@ $( document ).ready(function() {
 
   $(".weui-dialog__ft a").on("click", function () {
     $("#dialogs").hide()
+    $("#listenAudio").hide()
+    $("#loginNotice").hide()
     $("#changeLogs").hide()
     if ($(this).data('action') == 'paid') {
       chrome.runtime.sendMessage({
@@ -114,14 +225,28 @@ $( document ).ready(function() {
       });
     } else {
       if ($(this).data('action') == 'pay') {
-        $("#dialogs").show()
+        showReward()
       }
     }
   })
 
+  $("#listen").on("click", function () {
+    $("#listenAudio").show()
+  })
 
-  $("#pay").on("click", function () {
-    $("#dialogs").show()
+  $(".payReward").on("click", function () {
+    let target = $(this).data('target')
+    showReward(target)
+  })
+
+  $(".alipay_pay .switch").on("click", function () {
+    let to = $(this).data('to')
+    switchAlipay(to)
+  })
+  
+  $(".reward").on("click", function () {
+    let to = $(this).data('to')
+    switchWechat(to)
   })
 
   $("#showChangeLog").on("click", function () {
@@ -193,9 +318,26 @@ $( document ).ready(function() {
 
   $("#pricePro").on("click", function () {
     chrome.runtime.sendMessage({
-      text: "openPricePro",
+      text: "openPricePro"
+    }, function (response) {
+      console.log("Response: ", response);
+    })
+  })
+
+  $(".listenVoice").on("click", function () {
+    listenVoice($(this).data('type'), $(this).data('batch'))
+  })
+
+  // 体验通知
+  function listenVoice(type, batch) {
+    chrome.runtime.sendMessage({
+      text: type,
+      batch: batch,
+      test: true,
+      title: "【试听】京价保通知试听",
+      content: "并没有钱，这只是假象，你不要太当真"
     }, function (response) {
       console.log("Response: ", response);
     });
-  })
+  }
 })

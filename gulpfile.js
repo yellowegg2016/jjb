@@ -51,3 +51,5 @@ gulp.task('move-file', [], function () {
 });
 
 gulp.task('default', ['move-static', 'move-file', 'pack-js', 'pack-css']);
+
+gulp.task('dev', ['default', 'watch']);

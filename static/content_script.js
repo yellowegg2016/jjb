@@ -322,6 +322,44 @@ function autoVisitShop(setting) {
   }
 }
 
+// 移动页领取优惠券
+function pickupCoupon(setting) {
+  if (setting != 'never') {
+    let time = 0;
+    $("#couponListUl a.coupon-a").each(function () {
+      let that = $(this)
+      let coupon_name = that.find('.pro-info').text()
+      let coupon_id = that.find("input[class=id]").val()
+      let coupon_batch = that.find("input[class=batchId]").val()
+      let coupon_price = that.find('.pro-price .big-price').text() + '元 (' + that.find('.pro-price .price-info').text() + ')'
+      if (that.find('.pro-price .big-discount-price').text()) {
+        coupon_price = that.find('.pro-price .big-discount-price').text() + '折 (' + that.find('.pro-price .price-info').text() + ')'
+      }
+      if ($(this).find('.coupon-btn').text() == '立即领取') {
+        setTimeout(function () {
+          $(that).find('.coupon-btn').trigger("click")
+          setTimeout(function () {
+            if ($(that).find('.coupon-btn-yellow').text() == '去使用' ) {
+              chrome.runtime.sendMessage({
+                text: "coupon",
+                title: "京价保自动领到一张新的优惠券",
+                content: JSON.stringify({
+                  id: coupon_id,
+                  batch: coupon_batch,
+                  price: coupon_price,
+                  name: coupon_name
+                })
+              }, function (response) {
+                console.log("Response: ", response);
+              });
+            }
+          }, 500)
+        }, time)
+        time += 5000;
+      }
+    })
+  }
+}
 
 
 function CheckDom() {
@@ -514,32 +552,7 @@ function CheckDom() {
 
   // 领取精选券
   if ( $("#couponListUl").length > 0 ) {
-    let time = 0;
-    $("#couponListUl a.coupon-a").each(function() {
-      let that = $(this)
-      let coupon_name = that.find('.pro-info').text()
-      let coupon_id = that.find("input[class=id]").val()
-      let coupon_batch = that.find("input[class=batchId]").val()
-      let coupon_price = '面值：' + that.find('.pro-price .big-price').text() + '元 (' + that.find('.pro-price .price-info').text() + ')'
-      if ($(this).find('.coupon-btn').text() == '立即领取' ) {
-        setTimeout( function(){
-          $(that).find('.coupon-btn').trigger( "click" )
-          chrome.runtime.sendMessage({
-            text: "coupon",
-            title: "京价保自动领到一张新的优惠券",
-            content: JSON.stringify({
-              id: coupon_id,
-              batch: coupon_batch,
-              price: coupon_price,
-              name: coupon_name
-            })
-          }, function(response) {
-            console.log("Response: ", response);
-          });
-        }, time)
-        time += 5000;
-      }
-    })
+    getSetting('job2_frequency', pickupCoupon)
   };
 
   // 自动领取京东金融铂金会员京东支付返利
@@ -557,8 +570,8 @@ function CheckDom() {
               content += "求打赏"
             }
             chrome.runtime.sendMessage({
-              text: "checkin_notice",
-              batch: "jrfx",
+              text: "notice",
+              batch: "rebate",
               title: "京价保自动为您领取铂金会员支付返利",
               content: content
             }, function (response) {

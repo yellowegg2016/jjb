@@ -230,6 +230,27 @@ function run(jobId, force) {
 
 }
 
+function updateUnreadCount(change = 0) {
+  let lastUnreadCount = localStorage.getItem('unreadCount') || 0
+  let unreadCount = parseInt(Number(lastUnreadCount) + change)
+  if (unreadCount < 0) {
+    unreadCount = 0
+  }
+  localStorage.setItem('unreadCount', unreadCount);
+  if (unreadCount > 0) {
+    let unreadCountText = unreadCount.toString()
+    if (unreadCount > 100) {
+      unreadCountText = '99+'
+    }
+    chrome.browserAction.setBadgeText({ text: unreadCountText });
+    chrome.browserAction.setBadgeBackgroundColor({ color: "#4caf50" });
+  } else {
+    chrome.browserAction.setBadgeText({ text: "" });
+  }
+}
+
+
+
 $( document ).ready(function() {
   // 每10分钟运行一次定时任务
   chrome.alarms.create('delayInMinutes', {periodInMinutes: 10})
@@ -239,6 +260,9 @@ $( document ).ready(function() {
 
   // 载入后马上运行一次任务查找
   findJobs()
+
+  // 载入显示未读数量
+  updateUnreadCount()
 
   // 总是安全的访问京东
   var force_https = localStorage.getItem('force_https')
@@ -273,7 +297,7 @@ chrome.notifications.onClicked.addListener(function (notificationId){
         case 'jiabao':
           openPriceProPhoneMenu()
           break;
-        case 'jrfx':
+        case 'rebate':
           openFXDetailPage()
           break;
         default:
@@ -318,7 +342,7 @@ function forceHttps(tab) {
 // 清除不需要的tab
 function clearPinnedTabs() {
   chrome.tabs.query({
-    pinned: 'true'
+    pinned: true
   }, function (tabs) {
     var tabIds = $.map(tabs, function (tab) {
       if (tab && tab.url.indexOf('jd.com') !== -1) {
@@ -328,6 +352,8 @@ function clearPinnedTabs() {
     chrome.tabs.remove(tabIds)
   })
 }
+
+
 
 
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
@@ -379,25 +405,38 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       })
       break;
     case 'notice':
+      var play_audio = localStorage.getItem('play_audio')
       if (msg.batch == 'jiabao') {
-        var play_audio = localStorage.getItem('play_audio')
         var hide_good = localStorage.getItem('hide_good')
         if (play_audio && play_audio == 'checked') {
           var myAudio = new Audio();
-          myAudio.src = "static/audio/diamond.ogg";
+          myAudio.src = "static/audio/price_protection.ogg";
           myAudio.play();
         }
         if (hide_good && hide_good == 'checked') {
           msg.content = "具体成功没成功我也不清楚，你自己点开看看吧。"
         }
       }
+      if (msg.batch == 'rebate') {
+        if (play_audio && play_audio == 'checked') {
+          var myAudio = new Audio();
+          myAudio.src = "static/audio/rebate.ogg";
+          myAudio.play();
+        }
+      }
+      let icon = 'static/image/128.png'
+      if (msg.batch == 'rebate') {
+        icon = 'static/image/rebate.png'
+      }
+      if (msg.batch == 'jiabao') {
+        icon = 'static/image/money.png'
+      }
       chrome.notifications.create( new Date().getTime().toString() + '_' + msg.batch, {
         type: "basic",
         title: msg.title,
         message: msg.content,
-        iconUrl: 'static/image/128.png'
+        iconUrl: icon
       })
-      
       break;
     case 'checkin_notice':
       var mute_checkin = localStorage.getItem('mute_checkin')
@@ -407,14 +446,21 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         var play_audio = localStorage.getItem('play_audio')
         if (play_audio && play_audio == 'checked') {
           var myAudio = new Audio();
-          myAudio.src = "static/audio/coin.mp3";
+          myAudio.src = "static/audio/beans.ogg";
+          if (msg.batch == 'coin') {
+            myAudio.src = "static/audio/coin_drop.ogg";
+          }
           myAudio.play();
+        }
+        let icon = 'static/image/bean.png'
+        if (msg.batch == 'coin') {
+          icon = 'static/image/coin.png'
         }
         chrome.notifications.create( new Date().getTime().toString() + '_' + msg.batch, {
           type: "basic",
           title: msg.title,
           message: msg.content,
-          iconUrl: 'static/image/bean.png'
+          iconUrl: icon
         })
       }
       break;
@@ -436,11 +482,9 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         url: content.url,
         pinned: content.pinned == 'true'
       }, function (tabs) {
-        console.log('tabs', tabs)
         var tabIds = $.map(tabs, function (tab) {
           return tab.id
         })
-        console.log('tabIds', tabIds)
         chrome.tabs.remove(tabIds)
       })
       break;
@@ -463,8 +507,32 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       localStorage.setItem('jjb_orders', msg.content);
       localStorage.setItem('jjb_last_check', new Date().getTime());
       break;
+    case 'clearUnread':
+      updateUnreadCount(-999)
+      break;
     default:
       console.log("Received %o from %o, frame", msg, sender.tab, sender.frameId);
   }
+  // 保存消息
+  switch (msg.text) {
+    case 'coupon':
+    case 'notice':
+    case 'checkin_notice':
+      let messages = localStorage.getItem('jjb_messages') ? JSON.parse(localStorage.getItem('jjb_messages')) : [];
+      if (msg.test) {
+        break;
+      }
+      messages.push({
+        type: msg.text,
+        batch: msg.batch,
+        title: msg.title,
+        content: msg.content,
+        time: new Date()
+      })
+      updateUnreadCount(1)
+      localStorage.setItem('jjb_messages', JSON.stringify(messages));
+      break;
+  }
+
   sendResponse(msg, "Gotcha!");
 });
