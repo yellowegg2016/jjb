@@ -67,9 +67,9 @@ $( document ).ready(function() {
     }
   }
 
-  function showReward(){
+  function showReward(target){
     $("#dialogs").show()
-    switchWechat()
+    switchWechat(target)
     switchAlipay()
   }
 
@@ -296,25 +296,76 @@ $( document ).ready(function() {
       console.log("Response: ", response);
     });
   })
-  var notices = [
-    '成功申请到价保、功能建议欢迎打赏附言。',
-    '理想情况下京价保每月仅各种签到任务即可带来5元以上的等同现金收益。',
-    '京东页面经常更新，唯有你的支持才能让京价保保持更新。',
-    '京价保所有的功能均在本地完成，不会上传任何信息给任何人。',
-    '京价保部分功能会开启一个固定的标签页，过一会儿它会自动关掉，不必紧张。',
-    '京东的登录有效期很短，请在登录时勾选保存密码自动登录以便京价保自动完成工作。',
-    '京价保全部代码已上传到GitHub，欢迎审查代码。',
-  ]
+
   var rewards = [
     '给开发者加个鸡腿',
     '请开发者喝杯咖啡',
     '京价保就是好',
     '保价成功，感谢开发者',
     '返利到手，打赏开发者',
+    '赞赏支持'
   ]
 
-  $("#notice").text(notices[Math.floor(Math.random() * notices.length)])
-  $("#pay").text(rewards[Math.floor(Math.random() * rewards.length)])
+  var notices = [
+    {
+      text: '成功申请到价保、领取到返利或者有功能建议欢迎打赏附言。',
+      button: rewards[3]
+    },
+    {
+      text: '理想情况下京价保每月仅各种签到任务即可带来5元以上的等同现金收益。',
+      button: rewards[2]
+    },
+    {
+      text: '京东页面经常修改，唯有你的支持才能让京价保保持更新持续运作。',
+      button: rewards[5]
+    },
+    {
+      text: '京价保所有的功能均在本地完成，不会上传任何信息给任何人。',
+      button: rewards[5]
+    },
+    {
+      text: '京价保部分功能会开启一个固定的标签页，过一会儿它会自动关掉，不必紧张。',
+      button: rewards[1]
+    },
+    {
+      text: '京东的登录有效期很短，请在登录时勾选保存密码自动登录以便京价保自动完成工作。',
+      button: rewards[0]
+    },
+    {
+      text: '京价保全部代码已上传到GitHub，欢迎审查代码，了解京价保如何工作。',
+      button: rewards[0]
+    },
+    {
+      text: '软件开发需要开发者付出劳动和智慧，每一行代码都要付出相应的工作，并非唾手可得。',
+      button: rewards[5]
+    },
+    {
+      text: '京价保并不强制付费，但如果它确实帮到你，希望你也能帮助它保持更新。',
+      button: rewards[5]
+    },
+    {
+      text: '许多开源项目因为缺乏支持而停止更新，如果你希望京价保保持更新，请赞赏支持。',
+      button: rewards[5]
+    },
+    {
+      text: '如果每个京价保的用户都能每个月赞赏5元，开发者就能投入更多时间维护京价保，增加更多实用功能。',
+      button: rewards[5]
+    },
+    {
+      text: '把京价保推荐给你的朋友同样能帮助京价保保持更新，如果缺乏使用者，开发者可能会放弃维护项目。',
+      button: rewards[2]
+    },
+  ]
+
+  function changeNotice() {
+    let notice = notices[Math.floor(Math.random() * notices.length)]
+    $("#notice").text(notice.text)
+    $(".tips .payReward").text(notice.button)
+  }
+  
+  $("#notice").on("dblclick", function () {
+    changeNotice()
+  })
 
   $("#pricePro").on("click", function () {
     chrome.runtime.sendMessage({
