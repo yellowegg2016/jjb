@@ -4,28 +4,28 @@ let jobs = [
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fsitepp-fm.jd.com%2frest%2fpriceprophone%2fpriceProPhoneMenu',
     title: '价格保护',
     mode: 'iframe',
-    frequency: 'daily'
+    frequency: '5h'
   },
   {
     id: '2',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fcoupon.m.jd.com%2Fcenter%2FgetCouponCenter.action',
     title: '领精选券',
     mode: 'iframe',
-    frequency: 'daily'
+    frequency: '5h'
   },
   {
     id: '3',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3A%2F%2Fplus.m.jd.com%2Findex',
     title: 'PLUS券',
     mode: 'iframe',
-    frequency: 'daily'
+    frequency: '5h'
   },
   {
     id: '4',
     src: 'https://plogin.m.jd.com/user/login.action?appid=100&kpkey=&returnurl=https%3a%2f%2fm.jr.jd.com%2fjdbt%2fnewcoupons%2fcoupon-list.html%3fcategory%3d0%26coupony%3d0',
     title: '领白条券',
     mode: 'iframe',
-    frequency: 'daily'
+    frequency: '5h'
   },
   {
     id: '5',
@@ -71,6 +71,9 @@ let jobs = [
   },
 ]
 
+// 会员礼包
+// https://vip.m.jd.com/page/gift/list
+
 
 let mapFrequency = {
   '2h': 2 * 60,
@@ -78,6 +81,15 @@ let mapFrequency = {
   'daily': 12 * 60,
   'never': 99999
 }
+
+// 设置默认频率
+_.forEach(jobs, (job) => {
+  let frequency = localStorage.getItem('job' + job.id + '_frequency')
+  if (!frequency) {
+    localStorage.setItem('job' + job.id + '_frequency', job.frequency)
+  }
+})
+
 
 // This is to remove X-Frame-Options header, if present
 chrome.webRequest.onHeadersReceived.addListener(
@@ -414,7 +426,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
           myAudio.play();
         }
         if (hide_good && hide_good == 'checked') {
-          msg.content = "具体成功没成功我也不清楚，你自己点开看看吧。"
+          msg.content = "已经自动提交价保申请，正在等待申请结果。"
         }
       }
       if (msg.batch == 'rebate') {
@@ -463,6 +475,15 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
           iconUrl: icon
         })
       }
+      break;
+    case 'checkin_status':
+      let data = {
+        date: moment().format("DDD"),
+        time: new Date(),
+        value: msg.value
+      }
+      localStorage.setItem('jjb_checkin_' + msg.batch, JSON.stringify(data));
+      console.log('checkin_status', msg)
       break;
     case 'create_tab':
       var content = JSON.parse(msg.content)

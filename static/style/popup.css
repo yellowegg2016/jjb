@@ -85,7 +85,11 @@ select {
     height: 0px;
 }
 
-.reload{
+.frequency_settings .weui-cell__bd i.today{
+    display: none;
+}
+
+.reload-icon {
     background: url(../image/reload.svg) no-repeat 1px 5px;
     width: 20px;
     height: 21px;

@@ -7,6 +7,9 @@
     };
   });
 })(jQuery);
+
+let checkinTasks = ['jr-index', 'jr-qyy', 'vip', 'jdpay']
+
 $( document ).ready(function() {
   var orders = JSON.parse(localStorage.getItem('jjb_orders'))
   var messages = JSON.parse(localStorage.getItem('jjb_messages'))
@@ -20,6 +23,8 @@ $( document ).ready(function() {
   if (unreadCount > 0) {
     $("#unreadCount").text(unreadCount).fadeIn()
   }
+
+  $("#renderFrame").attr('src', '/render.html')
   
   if (login && login == 'Y') {
     $("#loginNotice").hide()
@@ -39,6 +44,19 @@ $( document ).ready(function() {
   if (!account) {
     $("#clearAccount").addClass('weui-btn_disabled')
   }
+
+  // 标记签到状态
+  checkinTasks.forEach(task => {
+    let record = JSON.parse(localStorage.getItem('jjb_checkin_' + task))
+    if (record && record.date == moment().format("DDD")) {
+      let title = '完成于：' + moment(record.time).locale('zh-cn').calendar()
+      if (record.value) {
+        title = title + '，领到：' + record.value
+      }
+      $(".checkin-" + task).find('.reload-icon').hide()
+      $(".checkin-" + task).find('.today').attr('title', title).show()
+    }
+  });
   
 
   function switchWechat(target) {
@@ -55,7 +73,6 @@ $( document ).ready(function() {
 
   function switchAlipay(target) {
     let to = target || ($("#dialogs .alipay_pay .alipay").is(':visible') ? 'redpack' : 'alipay')
-    console.log('switchAlipay', target, to)
     if (to == 'redpack') {
       console.log('show redpack')
       $("#dialogs .alipay_pay .alipay").hide()
@@ -191,9 +208,9 @@ $( document ).ready(function() {
       if (jobId) {
         var last_run_time = localStorage.getItem(jobId + '_lasttime')
         if (last_run_time) {
-          job_elem.find('.reload').attr('title', '上次运行： '+ moment(Number(last_run_time)).locale('zh-cn').calendar())
+          job_elem.find('.reload-icon').attr('title', '上次运行： '+ moment(Number(last_run_time)).locale('zh-cn').calendar())
         } else {
-          job_elem.find('.reload').attr('title', '从未执行')
+          job_elem.find('.reload-icon').attr('title', '从未执行')
         }
       }
     }

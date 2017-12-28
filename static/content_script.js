@@ -1,4 +1,29 @@
 // 京价保
+
+
+var observeDOM = (function () {
+  var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+    eventListenerSupported = window.addEventListener;
+
+  return function (obj, callback) {
+    if (MutationObserver) {
+      // define a new observer
+      var obs = new MutationObserver(function (mutations, observer) {
+        if (mutations[0].addedNodes.length || mutations[0].removedNodes.length)
+          callback();
+      });
+      // have the observer observe foo for changes in children
+      obs.observe(obj, { childList: true, subtree: true });
+    }
+    else if (eventListenerSupported) {
+      obj.addEventListener('DOMNodeInserted', callback, false);
+      obj.addEventListener('DOMNodeRemoved', callback, false);
+    }
+  };
+})();
+
+
+
 async function fetchProductPage(sku) {
   var resp = await fetch('https://item.m.jd.com/product/' + sku + '.html')
   var page = await resp.text()
@@ -85,17 +110,34 @@ async function dealProduct(product, order_info) {
       console.log('Pass: ' + product_name + '当前价格上次已经申请过了:', new_price, ' Vs ', lastApplyPrice)
       return 
     }
-    applyBtn.trigger( "tap" )
+    // 申请
     applyBtn.trigger( "click" )
+
     localStorage.setItem('jjb_order_' + applyId, new_price)
     chrome.runtime.sendMessage({
       text: "notice",
       batch: 'jiabao',
-      title: '报告老板，发现价格保护计划！',
-      content: product_name + '购买价：'+ order_price + ' 现价：' + new_price + '，已经自动提交价保申请，点击查看申请结果。'
+      title: '报告老板，发现价格保护机会！',
+      content: product_name.substr(0, 22) + '.. 购买价：'+ order_price + ' 现价：' + new_price + '，已经自动提交价保申请，正在等待申请结果。'
     }, function(response) {
       console.log("Response: ", response);
     });
+    // 等待15秒后检查申请结果
+    var resultId = "applyResult_" + applyId.substr(4)
+    setTimeout(function () {
+      observeDOM(document.getElementById(resultId), function () {
+        let resultText = $("#" + resultId).text()
+        if (resultText && resultText.indexOf("预计") < 0) {
+          chrome.runtime.sendMessage({
+            text: "notice",
+            title: "报告老板，价保申请有结果了",
+            content: product_name.substr(0, 22) + ".. 价保结果：" + resultText
+          }, function (response) {
+            console.log("Response: ", response);
+          });
+        }
+      });
+    }, 5000)
   }
 }
 
@@ -174,21 +216,25 @@ function CheckBaitiaoCouponDom() {
     var that = $(this)
     if ($(this).find('.js_getCoupon').text() == '点击领取' ) {
       var coupon_name = that.find('.coupon_lineclamp').text()
-      var coupon_price = '面值：' + that.find('.sc-money').text() + ' (' + that.find('.sc-message').text() + ')'
+      var coupon_price = that.find('.sc-money').text().trim() + ' (' + that.find('.sc-message').text().trim() + ')'
       setTimeout( function(){
         $(that).find('.js_getCoupon').trigger( "tap" )
         $(that).find('.js_getCoupon').trigger( "click" )
-        chrome.runtime.sendMessage({
-          text: "coupon",
-          title: "京价保自动领到一张白条优惠券",
-          content: JSON.stringify({
-            batch: 'baitiao',
-            price: coupon_price,
-            name: coupon_name
-          })
-        }, function(response) {
-          console.log("Response: ", response);
-        });
+        setTimeout(function () {
+          if ($(that).find('.coupon_receive').size() > 0) {
+            chrome.runtime.sendMessage({
+              text: "coupon",
+              title: "京价保自动领到一张白条优惠券",
+              content: JSON.stringify({
+                batch: 'baitiao',
+                price: coupon_price,
+                name: coupon_name
+              })
+            }, function (response) {
+              console.log("Response: ", response);
+            });
+          }
+        }, 500)
       }, time)
       time += 5000;
     }
@@ -416,8 +462,16 @@ function CheckDom() {
 
 
   // 会员页签到
-  if ( $(".sign-pop").length && !$(".sign-pop").hasClass('signed')) {
+  if ( $(".sign-pop").length) {
     console.log('签到领京豆')
+    if ($(".sign-pop").hasClass('signed')) {
+      chrome.runtime.sendMessage({
+        text: "checkin_status",
+        batch: "vip",
+        status: "signed"
+      })
+      return
+    }
     $(".sign-pop").trigger( "tap" )
     $(".sign-pop").trigger( "click" )
     chrome.runtime.sendMessage({
@@ -431,22 +485,40 @@ function CheckDom() {
   };
 
 
-  // 京东金融签到
-  if ( $("#qyy-appSign").length > 0 && $("#appSign-btn").text() == "快抢钢镚") {
-    $("#appSign-btn").trigger( "tap" )
-    $("#appSign-btn").trigger( "click" )
-    chrome.runtime.sendMessage({
-      text: "checkin_notice",
-      title: "京价保自动为您签到抢钢镚",
-      content: "应该是领到了0.1个钢镚"
-    }, function(response) {
-      console.log("Response: ", response);
-    });
+  // 京东金融慧赚钱签到
+  if ($(".assets-wrap .gangbeng").size() > 0) {
+    if ($(".gangbeng .btn").text() == "已领取") {
+      chrome.runtime.sendMessage({
+        text: "checkin_status",
+        batch: "jr-qyy",
+        status: "signed"
+      })
+      return
+    }
+    if ($(".gangbeng .btn").text() == "领钢镚") {
+      $(".gangbeng .btn").trigger( "tap" )
+      $(".gangbeng .btn").trigger( "click" )
+      chrome.runtime.sendMessage({
+        text: "checkin_notice",
+        title: "京价保自动为您签到抢钢镚",
+        content: "应该是领到了0.05个钢镚"
+      }, function(response) {
+        console.log("Response: ", response);
+      });
+    }
   };
 
-
   // 京东支付签到
-  if ( $(".signIn .signInBtn").length > 0  && !$(".signInBtn").hasClass('clicked')) {
+  if ( $(".signIn .signInBtn").size() > 0) {
+    if ($(".signInBtn").hasClass('clicked')) {
+      chrome.runtime.sendMessage({
+        text: "checkin_status",
+        batch: "jdpay",
+        value: $("#rewardTotal").text() + '京豆',
+        status: "signed"
+      })
+      return
+    }
     $(".signInBtn").trigger( "tap" )
     $(".signInBtn").trigger( "click" )
     chrome.runtime.sendMessage({
@@ -460,7 +532,15 @@ function CheckDom() {
   };
 
   // 京东金融首页
-  if ($("#index-qian-btn").length > 0 && $("#index-qian-btn .qian-text").text() == '签到') {
+  if ($(".ban-center .m-qian").size() > 0) {
+    if ($(".ban-center .m-qian .qian-text").text() == '已签到') {
+      chrome.runtime.sendMessage({
+        text: "checkin_status",
+        batch: "jr-index",
+        status: "signed"
+      })
+      return
+    }
     $("#index-qian-btn").trigger("tap")
     $("#index-qian-btn").trigger("click")
     chrome.runtime.sendMessage({
@@ -480,7 +560,7 @@ function CheckDom() {
       var that = $(this)
       if ($(this).find('.get-btn').text() == '立即领取' ) {
         var coupon_name = that.find('.pin-lmt').text()
-        var coupon_price = '面值：' + that.find('.cp-val').text() + '元 (' + that.find('.cp-lmt').text() + ')'
+        var coupon_price = that.find('.cp-val').text() + '元 (' + that.find('.cp-lmt').text() + ')'
         setTimeout( function(){
           $(that).find('.get-btn').trigger( "click" )
           chrome.runtime.sendMessage({

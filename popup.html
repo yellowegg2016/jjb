@@ -27,7 +27,7 @@
                   <div id="job1" class="weui-cell weui-cell_select weui-cell_select-after">
                     <div class="weui-cell__bd" >
                       <span class="tippy" title="价格保护默认只申请15天内下单的商品">价格保护</span>
-                      <i class="reload tippy" data-theme="light"></i>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
                     </div>
                     <div class="weui-cell__bd">
                       <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job1_frequency">
@@ -41,7 +41,7 @@
                   <div id="job2" class="weui-cell weui-cell_select weui-cell_select-after">
                     <div class="weui-cell__bd tippy">
                       <span class="tippy">精选优惠券</span>
-                      <i class="reload tippy" data-theme="light"></i>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
                     </div>
                     <div class="weui-cell__bd">
                       <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job2_frequency">
@@ -55,7 +55,7 @@
                   <div id="job3" class="weui-cell weui-cell_select weui-cell_select-after">
                     <div class="weui-cell__bd">
                       <span class="tippy" title="当然啦，你得先是PLUS会员才能领到">PLUS券</span>
-                      <i class="reload tippy" data-theme="light"></i>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
                     </div>
                     <div class="weui-cell__bd">
                       <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job3_frequency">
@@ -69,7 +69,7 @@
                   <div id="job4" class="weui-cell weui-cell_select weui-cell_select-after">
                     <div class="weui-cell__bd">
                       <span class="tippy" title="白条券是个好东西啊">白条券</span>
-                      <i class="reload tippy" data-theme="light"></i>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
                     </div>
                     <div class="weui-cell__bd">
                       <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job4_frequency">
@@ -81,9 +81,10 @@
                     </div>
                   </div>
                   <div id="job5" class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__bd">
-                      <span class="tippy" title="京东会员移动页每日签到">京豆签到</span>
-                      <i class="reload tippy" data-theme="light"></i>
+                    <div class="weui-cell__bd checkin-vip">
+                      <span class="tippy" title="京东会员移动页每日签到">京东会员签到</span>
+                      <i class="today tippy weui-icon-success-circle reload"></i>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
                     </div>
                     <div class="weui-cell__bd">
                       <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job5_frequency">
@@ -93,9 +94,10 @@
                     </div>
                   </div>
                   <div id="job6" class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__bd">
-                      <span class="tippy" title="京东金融会员每日签到有钢镚奖励">钢镚签到</span>
-                      <i class="reload tippy" data-theme="light"></i>
+                    <div class="weui-cell__bd checkin-jr-qyy">
+                      <span class="tippy" title="京东金融惠赚钱每日签到有钢镚奖励">金融钢镚签到</span>
+                      <i class="today tippy weui-icon-success-circle reload"></i>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
                     </div>
                     <div class="weui-cell__bd">
                       <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job6_frequency">
@@ -104,22 +106,11 @@
                       </select>
                     </div>
                   </div>
-                  <div id="job7" class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__bd">
-                      <span class="tippy" title="这个功能是自动浏览店铺签到得京豆，会开一些隐藏标签。">浏览店铺签到</span>
-                      <i class="reload tippy" data-theme="light"></i>
-                    </div>
-                    <div class="weui-cell__bd">
-                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job7_frequency">
-                        <option value="daily">每天</option>
-                        <option value="never">从不</option>
-                      </select>
-                    </div>
-                  </div>
                   <div id="job8" class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__bd" >
+                    <div class="weui-cell__bd checkin-jdpay" >
                       <span>京东支付签到</span>
-                      <i class="reload tippy" data-theme="light"></i>
+                      <i class="today tippy weui-icon-success-circle reload"></i>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
                     </div>
                     <div class="weui-cell__bd">
                       <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job8_frequency">
@@ -129,9 +120,10 @@
                     </div>
                   </div>
                   <div id="job9" class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__bd">
-                      <span class="tippy"  title="金融会员每日签到，也会开标签页">金融会员签到</span> 
-                      <i class="reload tippy" data-theme="light"></i>
+                    <div class="weui-cell__bd checkin-jr-index">
+                      <span class="tippy"  title="金融会员每日签到，也会开标签页">金融会员签到</span>
+                      <i class="today tippy weui-icon-success-circle reload"></i>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
                     </div>
                     <div class="weui-cell__bd">
                       <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job9_frequency">
@@ -140,10 +132,22 @@
                       </select>
                     </div>
                   </div>
+                  <div id="job7" class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__bd">
+                      <span class="tippy" title="这个功能是自动浏览店铺签到得京豆，会开一些隐藏标签。">浏览店铺签到</span>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job7_frequency">
+                        <option value="daily">每天</option>
+                        <option value="never">从不</option>
+                      </select>
+                    </div>
+                  </div>
                   <div id="job10" class="weui-cell weui-cell_select weui-cell_select-after">
                     <div class="weui-cell__bd">
                       <span class="tippy"  title="金融铂金会员京东支付返利1%，需要在7天内领取">铂金会员返利</span>
-                      <i class="reload tippy" data-theme="light"></i>
+                      <i class="reload-icon reload tippy" data-theme="light"></i>
                     </div>
                     <div class="weui-cell__bd">
                       <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job10_frequency">
@@ -290,7 +294,7 @@
               <p class="weui-tabbar__label">源代码</p>
             </a>
           </div>
-          <iframe id="renderFrame" src="/render.html" frameborder="0"></iframe>
+          <iframe id="renderFrame" src="" frameborder="0"></iframe>
         </div>
       </div>
 
