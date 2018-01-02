@@ -106,19 +106,6 @@
                       </select>
                     </div>
                   </div>
-                  <div id="job8" class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__bd checkin-jdpay" >
-                      <span>京东支付签到</span>
-                      <i class="today tippy weui-icon-success-circle reload"></i>
-                      <i class="reload-icon reload tippy" data-theme="light"></i>
-                    </div>
-                    <div class="weui-cell__bd">
-                      <select class="weui-select" data-persist="garlic" class="garlic-auto-save" data-domain="true" name="job8_frequency">
-                        <option value="daily">每天</option>
-                        <option value="never">从不</option>
-                      </select>
-                    </div>
-                  </div>
                   <div id="job9" class="weui-cell weui-cell_select weui-cell_select-after">
                     <div class="weui-cell__bd checkin-jr-index">
                       <span class="tippy"  title="金融会员每日签到，也会开标签页">金融会员签到</span>
@@ -306,8 +293,9 @@
               <strong class="weui-dialog__title">最近更新</strong>
             </div>
             <div class="weui-dialog__bd changelogs">
+              <p>1.15.0 给任务完成<b>增加了结果回调</b>，现在大部分任务都能知道是否真正成功了；</p
               <p>1.14.0 <b>增加了消息模块</b>；修复了任务未自动运行的问题；增加了音效；</p>
-              <p>1.13.7 改善自动登录策略；修复需在标签页中完成的任务的问题；</p>
+              <p>1.13.7 改善<b>自动登录策略</b>；修复需在标签页中完成的任务的问题；</p>
               <p>1.13.4 优化加载速度；大幅降低展示赞赏提示的频率；</p>
               <p>1.13.2 增加更多配置；增加建议反馈；</p>
               <p>1.13.0 增加铂金会员支付返利自动领取；调整账号保存方式；</p>
@@ -355,21 +343,23 @@
                   <label class="segmented-control__label" for="payMethod-weixin">微信</label>
                 </li>
                 <li class="segmented-control__item">
-                  <input class="segmented-control__input" id="payMethod-phone" type="radio" value="alipay" name="payMethod">
-                  <label class="segmented-control__label" for="payMethod-phone">支付宝</label>
+                  <input class="segmented-control__input" id="payMethod-alipay" type="radio" value="alipay" name="payMethod">
+                  <label class="segmented-control__label" for="payMethod-alipay">支付宝</label>
                 </li>
               </ul>
               <div class="weui-dialog__bd weixin_pay">
                 <div class="ming">
                   <div class="reward" data-to="samedi">
-                    <img src="static/image/weixin_pay.png" height="248px" >
-                    <p>切换打赏 Samedi（声优）</p>
+                    <h4> 打赏插件作者：小明 </h4>
+                    <img src="static/image/weixin_pay.png" class="qrcode">
+                    <p class="switch-tips">切换打赏 Samedi（声优）</p>
                   </div>
                 </div>
                 <div class="samedi">
                   <div class="reward" data-to="ming">
-                    <img src="static/image/samedi.png" height="248px">
-                    <p>切换打赏 小明（作者）</p>
+                    <h4> 打赏声优：Samedi </h4>
+                    <img src="static/image/samedi.png" class="qrcode">
+                    <p class="switch-tips">切换打赏 小明（作者）</p>
                   </div>
                 </div>
               </div>

@@ -450,6 +450,22 @@ button.Button.messages-tab.Button--plain:focus {
     color: #d29737;
 }
 
+.reward h4{
+    padding-top: 10px;
+    font-size: 22px; 
+    color:#4e4c4c;
+}
+
+.reward .qrcode{
+    width: 210px;
+    padding: 10px;
+}
+
+.reward .switch-tips{
+    font-size: 14px;
+    color: #ccc;
+}
+
 .switch{
     cursor: pointer;
     color: #f54e4d;
@@ -486,4 +502,8 @@ button.Button.messages-tab.Button--plain:focus {
 
 #listenAudio .weui-cell_access{
     cursor: pointer;
+}
+
+#changeLogs b {
+    color: #4CAF50;
 }

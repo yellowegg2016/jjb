@@ -49,13 +49,6 @@ let jobs = [
     frequency: 'never'
   },
   {
-    id: '8',
-    src: 'https://plogin.m.jd.com/user/login.action?appid=100&returnurl=https%3a%2f%2fhome.jdpay.com%2fmy%2fsignIndex%3ffrom%3ddxjg%26source%3dJDSC',
-    title: '京东支付签到',
-    mode: 'iframe',
-    frequency: 'daily'
-  },
-  {
     id: '9',
     src: 'https://passport.jd.com/new/login.aspx?ReturnUrl=https%3a%2f%2fvip.jr.jd.com%2f',
     title: '京东金融会员签到',
@@ -78,7 +71,7 @@ let jobs = [
 let mapFrequency = {
   '2h': 2 * 60,
   '5h': 5 * 60,
-  'daily': 12 * 60,
+  'daily': 24 * 60,
   'never': 99999
 }
 
@@ -229,13 +222,6 @@ function run(jobId, force) {
         pinned: true
       }, function (tab) {
         chrome.alarms.create('closeTab_'+tab.id, {delayInMinutes: 3})
-      })
-    }
-    var last_run_at = localStorage.setItem('job' + job.id + '_lasttime', new Date().getTime())
-    // 安排下一次运行
-    if (mapFrequency[job.frequency] < 1000) {
-      chrome.alarms.create('runJob_'+job.id, {
-        delayInMinutes: mapFrequency[job.frequency]
       })
     }
   }
@@ -476,14 +462,33 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         })
       }
       break;
+    // 签到状态
     case 'checkin_status':
+      console.log('checkin_status', msg)
+      let currentStatus = localStorage.getItem('jjb_checkin_' + msg.batch)
       let data = {
         date: moment().format("DDD"),
         time: new Date(),
         value: msg.value
       }
-      localStorage.setItem('jjb_checkin_' + msg.batch, JSON.stringify(data));
-      console.log('checkin_status', msg)
+      if (currentStatus.date == moment().format("DDD")) {
+        console.log('已经记录过今日签到状态了')
+      } else {
+        localStorage.setItem('jjb_checkin_' + msg.batch, JSON.stringify(data));
+      }
+      break;
+    // 运行状态
+    case 'run_status':
+      console.log('run_status', msg)
+      var jobList = getJobs()
+      var job = _.find(jobList, { id: msg.jobId })
+      var last_run_at = localStorage.setItem('job' + job.id + '_lasttime', new Date().getTime())
+      // 安排下一次运行
+      if (mapFrequency[job.frequency] < 1000) {
+        chrome.alarms.create('runJob_' + job.id, {
+          delayInMinutes: mapFrequency[job.frequency]
+        })
+      }
       break;
     case 'create_tab':
       var content = JSON.parse(msg.content)

@@ -8,7 +8,7 @@
   });
 })(jQuery);
 
-let checkinTasks = ['jr-index', 'jr-qyy', 'vip', 'jdpay']
+let checkinTasks = ['jr-index', 'jr-qyy', 'vip']
 
 $( document ).ready(function() {
   var orders = JSON.parse(localStorage.getItem('jjb_orders'))
@@ -88,8 +88,20 @@ $( document ).ready(function() {
     $("#dialogs").show()
     switchWechat(target)
     switchAlipay()
+    setTimeout(() => {
+      $("#payMethod-alipay").trigger('click')
+    }, 50);
   }
 
+  function switchPayMethod(payMethod) {
+    if (payMethod == 'weixin') {
+      $('.weixin_pay').show()
+      $('.alipay_pay').hide()
+    } else {
+      $('.weixin_pay').hide()
+      $('.alipay_pay').show()
+    }
+  }
 
   if (!browser) {
     // tippy
@@ -218,13 +230,7 @@ $( document ).ready(function() {
 
   $(".weui-dialog input[name='payMethod']" ).change(function() {
     var payMethod = $(this).val()
-    if (payMethod == 'weixin') {
-      $('.weixin_pay').show()
-      $('.alipay_pay').hide()
-    } else {
-      $('.weixin_pay').hide()
-      $('.alipay_pay').show()
-    }
+    switchPayMethod(payMethod)
   });
 
 
