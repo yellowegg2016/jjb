@@ -312,6 +312,7 @@ img.weui-tabbar__icon {
 
 #feedbackResult,
 #feedbackDialags,
+#loginNotice,
 #listenAudio {
     display: none;
 }

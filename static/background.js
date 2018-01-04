@@ -464,14 +464,13 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       break;
     // 签到状态
     case 'checkin_status':
-      console.log('checkin_status', msg)
-      let currentStatus = localStorage.getItem('jjb_checkin_' + msg.batch)
+      let currentStatus = localStorage.getItem('jjb_checkin_' + msg.batch) ? JSON.parse(localStorage.getItem('jjb_checkin_' + msg.batch)) : null
       let data = {
         date: moment().format("DDD"),
         time: new Date(),
         value: msg.value
       }
-      if (currentStatus.date == moment().format("DDD")) {
+      if (currentStatus && currentStatus.date == moment().format("DDD")) {
         console.log('已经记录过今日签到状态了')
       } else {
         localStorage.setItem('jjb_checkin_' + msg.batch, JSON.stringify(data));

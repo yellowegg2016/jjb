@@ -706,36 +706,51 @@ function CheckDom() {
 
   // 自动领取京东金融铂金会员京东支付返利（10：金融铂金会员支付返利）
   if ($("#react-root .react-root .react-view").length > 0) {
-    let time = 0;
     console.log('京东金融铂金会员返利')
     chrome.runtime.sendMessage({
       text: "run_status",
       jobId: "10"
     })
-    $("#react-root .react-root .react-view img").each(function() {
-      let that = $(this)
-      if (that.attr("src") && that.width() > 40) {
-        setTimeout(function () {
-          mockClick(that[0])
-          let amount = that.parent().parent().prev().find('span').last().text()
-          if (amount && amount > 0.1) {
-            let content = "应该是领到了" + amount + '元的返利。'
-            if (amount > 5) {
-              content += "求打赏"
-            }
-            chrome.runtime.sendMessage({
-              text: "notice",
-              batch: "rebate",
-              title: "京价保自动为您领取铂金会员支付返利",
-              content: content
-            }, function (response) {
-              console.log("Response: ", response);
-            });
-          }
-        }, time)
-        time += 5000;
+    // 切换到支付返现视图
+    $("#react-root .react-root .react-view .react-view .react-view .react-view .react-view .react-view .react-view .react-view span").each(function () {
+      let targetEle = $(this)
+      if (targetEle.text() == '支付返现') {
+        mockClick(targetEle[0])
+        setTimeout(() => {
+          getPlatinumRebate()
+        }, 500);
       }
     })
+    // 领取返利
+    function getPlatinumRebate() {
+      let time = 0;
+      $("#react-root .react-root .react-view img").each(function () {
+        let that = $(this)
+        if (that.attr("src") && that.width() > 40) {
+          setTimeout(function () {
+            mockClick(that[0])
+            let amount = that.parent().parent().prev().find('span').last().text()
+            if (amount && amount > 0.1) {
+              let content = "应该是领到了" + amount + '元的返利。'
+              if (amount > 5) {
+                content += "求打赏"
+              }
+              chrome.runtime.sendMessage({
+                text: "notice",
+                batch: "rebate",
+                value: amount,
+                unit: 'cash',
+                title: "京价保自动为您领取铂金会员支付返利",
+                content: content
+              }, function (response) {
+                console.log("Response: ", response);
+              });
+            }
+          }, time)
+          time += 5000;
+        }
+      })
+    }
   }
 
   // 自动评价 

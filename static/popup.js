@@ -38,7 +38,7 @@ $( document ).ready(function() {
       }
     }
   } else {
-    $("#login").show()
+    $("#loginNotice").show()
   }
 
   if (!account) {
@@ -47,7 +47,7 @@ $( document ).ready(function() {
 
   // 标记签到状态
   checkinTasks.forEach(task => {
-    let record = JSON.parse(localStorage.getItem('jjb_checkin_' + task))
+    let record = localStorage.getItem('jjb_checkin_' + task) ? JSON.parse(localStorage.getItem('jjb_checkin_' + task)) : null
     if (record && record.date == moment().format("DDD")) {
       let title = '完成于：' + moment(record.time).locale('zh-cn').calendar()
       if (record.value) {
@@ -88,9 +88,12 @@ $( document ).ready(function() {
     $("#dialogs").show()
     switchWechat(target)
     switchAlipay()
-    setTimeout(() => {
-      $("#payMethod-alipay").trigger('click')
-    }, 50);
+    let time = Date.now().toString()
+    if (time[time.length - 1] < 5 && !target) {
+      setTimeout(() => {
+        $("#payMethod-alipay").trigger('click')
+      }, 50);
+    }
   }
 
   function switchPayMethod(payMethod) {
